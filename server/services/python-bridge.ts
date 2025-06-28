@@ -43,7 +43,7 @@ export class PythonBridge extends EventEmitter {
       throw new Error(`Python bridge script not found at ${scriptPath}`);
     }
 
-    this.process = spawn('python', [scriptPath], {
+    this.process = spawn('python3', [scriptPath], {
       stdio: ['pipe', 'pipe', 'pipe'],
       cwd: pythonPath,
     });
