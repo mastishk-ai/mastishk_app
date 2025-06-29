@@ -1,5 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Download, Upload, HelpCircle } from "lucide-react";
 
 interface HeaderProps {
@@ -61,6 +62,7 @@ export function Header({ title, subtitle, trainingStatus }: HeaderProps) {
             <Button variant="ghost" size="sm">
               <HelpCircle className="w-4 h-4" />
             </Button>
+            <ThemeToggle />
           </div>
         </div>
       </div>
