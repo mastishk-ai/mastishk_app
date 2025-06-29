@@ -97,6 +97,12 @@ Mastishk Transformer Studio is an advanced transformer experimentation platform 
 
 ## Changelog
 
+- June 29, 2025: **SIDEBAR SCROLLING FIX - Added scrollable sidebar navigation**
+  - Fixed sidebar navigation to be scrollable (overflow-y-auto) 
+  - Legal pages now accessible below Documentation section
+  - Users can scroll through all navigation sections including Legal & Info
+  - Enhanced checkpoint resume system with visual confirmation indicators
+  - Added comprehensive logging system showing exact checkpoint resumption steps
 - June 29, 2025: **MAJOR UPDATE - Integrated Complete Multimodal Mastishk Transformer + UI Improvements**
   - Replaced all mock implementations with user's original sophisticated transformer script
   - Implemented complete MoE (Mixture of Experts) with 8 experts and 2 experts per token

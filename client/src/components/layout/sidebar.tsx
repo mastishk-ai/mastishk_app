@@ -158,7 +158,7 @@ export function Sidebar({ modelStatus }: SidebarProps) {
       </div>
       
       {/* Navigation */}
-      <nav className="flex-1 px-6 py-8">
+      <nav className="flex-1 px-6 py-8 overflow-y-auto">
         <div className="space-y-8">
           {/* Model Configuration */}
           <div className="space-y-3">
