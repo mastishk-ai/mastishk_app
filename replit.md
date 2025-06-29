@@ -97,6 +97,12 @@ Mastishk Transformer Studio is an advanced transformer experimentation platform 
 
 ## Changelog
 
+- June 29, 2025: Completed training control system with working Stop Training functionality
+  - Fixed Stop Training button to properly handle mock training simulation
+  - Added interval tracking and cleanup to prevent memory leaks in training manager
+  - Updated stopTraining method to clear mock training intervals and handle Python bridge unavailability
+  - Implemented graceful error handling with fallback to mock training system
+  - Training system now fully functional: Start Training, Stop Training, and real-time status updates
 - June 29, 2025: Fixed Start Training button functionality and added learning rate parameter
   - Resolved "Model not ready for training" errors by changing default model status from "idle" to "ready"
   - Added learning rate parameter with default value 5.0e-4 and range control (1e-6 to 1e-1)

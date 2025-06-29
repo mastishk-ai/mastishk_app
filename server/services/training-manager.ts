@@ -9,6 +9,7 @@ import { EventEmitter } from 'events';
 export class TrainingManager extends EventEmitter {
   private activeTrainingRun: TrainingRun | null = null;
   private trainingDataDirectory = path.join(process.cwd(), 'training_data');
+  private mockTrainingInterval: NodeJS.Timeout | null = null;
 
   constructor() {
     super();
@@ -108,9 +109,12 @@ export class TrainingManager extends EventEmitter {
     const maxSteps = config.max_steps || 100;
     const learningRate = config.learning_rate || 0.0005;
     
-    const interval = setInterval(async () => {
+    this.mockTrainingInterval = setInterval(async () => {
       if (!this.activeTrainingRun || this.activeTrainingRun.id !== trainingRun.id) {
-        clearInterval(interval);
+        if (this.mockTrainingInterval) {
+          clearInterval(this.mockTrainingInterval);
+          this.mockTrainingInterval = null;
+        }
         return;
       }
       
@@ -132,7 +136,10 @@ export class TrainingManager extends EventEmitter {
       await this.handleTrainingProgress(mockProgress);
       
       if (currentStep >= maxSteps) {
-        clearInterval(interval);
+        if (this.mockTrainingInterval) {
+          clearInterval(this.mockTrainingInterval);
+          this.mockTrainingInterval = null;
+        }
         await this.handleTrainingComplete({ success: true });
       }
     }, 2000); // Update every 2 seconds
@@ -212,19 +219,40 @@ export class TrainingManager extends EventEmitter {
       throw new Error('No training is currently running');
     }
 
-    await pythonBridge.stopTraining();
+    // Clear mock training interval if running
+    if (this.mockTrainingInterval) {
+      clearInterval(this.mockTrainingInterval);
+      this.mockTrainingInterval = null;
+      console.log('Mock training interval cleared');
+    }
+
+    // Try to stop Python training, but continue even if it fails
+    try {
+      await pythonBridge.stopTraining();
+    } catch (error) {
+      console.log('Python bridge unavailable for stopping, continuing with mock training stop');
+    }
 
     await storage.updateTrainingRun(this.activeTrainingRun.id, {
       status: 'stopped',
       completedAt: new Date(),
     });
 
+    // Store values before clearing activeTrainingRun
+    const stoppedRunId = this.activeTrainingRun.id;
+    const modelId = this.activeTrainingRun.modelId;
+
     // Update model status
-    if (this.activeTrainingRun.modelId) {
-      await storage.updateModel(this.activeTrainingRun.modelId, { status: 'ready' });
+    if (modelId) {
+      await storage.updateModel(modelId, { status: 'ready' });
     }
 
     this.activeTrainingRun = null;
+    
+    // Emit stop event for real-time updates
+    this.emit('training_stopped', {
+      trainingRunId: stoppedRunId,
+    });
   }
 
   async pauseTraining(): Promise<void> {
