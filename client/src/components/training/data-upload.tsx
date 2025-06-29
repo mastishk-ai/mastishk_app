@@ -4,8 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
-import { UploadCloud, File, X, Database, ExternalLink } from "lucide-react";
+import { UploadCloud, File, X, Database, ExternalLink, AlertCircle } from "lucide-react";
 import { useTraining } from "@/hooks/use-training";
+import { useToast } from "@/hooks/use-toast";
 
 interface UploadedFile {
   filename: string;
@@ -18,7 +19,47 @@ export function DataUpload() {
   const [dragActive, setDragActive] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [previewText, setPreviewText] = useState("");
-  const { uploadData, isUploading } = useTraining();
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const { uploadDataMutation, isUploading } = useTraining();
+  const { toast } = useToast();
+
+  const handleFiles = useCallback(async (files: FileList) => {
+    setUploadError(null);
+    
+    try {
+      // Preview first file if it's text (do this before upload to avoid blocking)
+      if (files[0] && files[0].type.startsWith('text/')) {
+        const text = await files[0].text();
+        setPreviewText(text.slice(0, 500) + (text.length > 500 ? '...' : ''));
+      }
+      
+      // Upload files using mutation
+      uploadDataMutation.mutate(files, {
+        onSuccess: (result) => {
+          if (result && result.files) {
+            setUploadedFiles(prev => [...prev, ...result.files]);
+            toast({
+              title: "Upload Successful",
+              description: `${result.files.length} files uploaded successfully`,
+            });
+          }
+        },
+        onError: (error) => {
+          const errorMessage = error instanceof Error ? error.message : 'Upload failed';
+          setUploadError(errorMessage);
+          toast({
+            title: "Upload Failed",
+            description: errorMessage,
+            variant: "destructive",
+          });
+        }
+      });
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Upload failed';
+      setUploadError(errorMessage);
+      console.error('Upload failed:', error);
+    }
+  }, [uploadDataMutation, toast]);
 
   const handleDrag = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -46,21 +87,6 @@ export function DataUpload() {
       handleFiles(e.target.files);
     }
   }, []);
-
-  const handleFiles = async (files: FileList) => {
-    try {
-      const result = await uploadData(files);
-      setUploadedFiles(prev => [...prev, ...result.files]);
-      
-      // Preview first file if it's text
-      if (files[0] && files[0].type.startsWith('text/')) {
-        const text = await files[0].text();
-        setPreviewText(text.slice(0, 500) + (text.length > 500 ? '...' : ''));
-      }
-    } catch (error) {
-      console.error('Upload failed:', error);
-    }
-  };
 
   const removeFile = (index: number) => {
     setUploadedFiles(prev => prev.filter((_, i) => i !== index));
@@ -116,12 +142,25 @@ export function DataUpload() {
             </div>
 
             {isUploading && (
-              <div className="space-y-2">
+              <div className="space-y-2 bg-background p-4 rounded-lg border">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Uploading...</span>
-                  <span className="text-sm text-muted-foreground">Processing files</span>
+                  <span className="text-sm font-medium text-foreground">Uploading files...</span>
+                  <span className="text-sm text-muted-foreground">Please wait</span>
                 </div>
-                <Progress value={65} className="w-full" />
+                <Progress value={75} className="w-full" />
+                <p className="text-xs text-muted-foreground">
+                  Files are being processed and saved to the server
+                </p>
+              </div>
+            )}
+
+            {uploadError && (
+              <div className="space-y-2 bg-destructive/10 p-4 rounded-lg border border-destructive/20">
+                <div className="flex items-center space-x-2">
+                  <AlertCircle className="w-4 h-4 text-destructive" />
+                  <span className="text-sm font-medium text-destructive">Upload Failed</span>
+                </div>
+                <p className="text-xs text-muted-foreground">{uploadError}</p>
               </div>
             )}
 

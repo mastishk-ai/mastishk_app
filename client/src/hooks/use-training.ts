@@ -122,6 +122,10 @@ export function useTraining() {
 
       return response.json();
     },
+    onSuccess: () => {
+      // Invalidate any data-related queries
+      queryClient.invalidateQueries({ queryKey: ['/api/training-data'] });
+    },
   });
 
   const getTrainingMetrics = useCallback(async (runId: number, limit?: number) => {
@@ -129,21 +133,22 @@ export function useTraining() {
     return response.json();
   }, []);
 
-  const isTraining = trainingStatus?.isTraining || false;
-  const activeRun = trainingStatus?.activeRun;
+  const isTraining = (trainingStatus as any)?.isTraining || false;
+  const activeRun = (trainingStatus as any)?.activeRun;
 
   return {
     config,
     updateConfig,
     trainingRuns: trainingRuns || [],
-    trainingStatus,
+    trainingStatus: trainingStatus || {},
     isTraining,
     activeRun,
     startTraining: startTrainingMutation.mutate,
     stopTraining: stopTrainingMutation.mutate,
     pauseTraining: pauseTrainingMutation.mutate,
     resumeTraining: resumeTrainingMutation.mutate,
-    uploadData: uploadDataMutation.mutate,
+    uploadData: uploadDataMutation.mutateAsync,
+    uploadDataMutation,
     getTrainingMetrics,
     isStarting: startTrainingMutation.isPending,
     isStopping: stopTrainingMutation.isPending,
