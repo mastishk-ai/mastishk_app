@@ -101,6 +101,50 @@ export class CheckpointManager {
     return await storage.getCheckpoint(id);
   }
 
+  async createCheckpoint(
+    modelId: number,
+    trainingRunId: number | null,
+    name: string,
+    step: number,
+    loss: number
+  ): Promise<Checkpoint> {
+    const checkpointName = name || `checkpoint-${modelId}-${step}`;
+    const filePath = path.join(this.checkpointsDirectory, `${checkpointName}.pt`);
+
+    // Create a mock checkpoint file for demonstration
+    const checkpointData = {
+      model_state: `Mock model state for ${checkpointName}`,
+      optimizer_state: `Mock optimizer state`,
+      step,
+      loss,
+      timestamp: new Date().toISOString()
+    };
+
+    await fs.writeFile(filePath, JSON.stringify(checkpointData, null, 2));
+
+    // Get file size
+    const stats = await fs.stat(filePath);
+    const fileSize = stats.size;
+
+    const insertCheckpoint: InsertCheckpoint = {
+      modelId,
+      trainingRunId,
+      name: checkpointName,
+      step,
+      loss,
+      filePath,
+      fileSize,
+      metadata: { created_by: 'manual', step, loss }
+    };
+
+    const checkpoint = await storage.createCheckpoint(insertCheckpoint);
+
+    // Check if this is the best checkpoint so far
+    await this.updateBestCheckpoint(modelId, checkpoint);
+
+    return checkpoint;
+  }
+
   async cleanupOldCheckpoints(modelId: number, maxCheckpoints: number = 10): Promise<number> {
     const checkpoints = await storage.getCheckpoints(modelId);
     

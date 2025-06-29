@@ -394,6 +394,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.post('/api/checkpoints', async (req, res) => {
+    try {
+      const { modelId, trainingRunId, name, step, loss } = req.body;
+      const checkpoint = await checkpointManager.createCheckpoint(
+        modelId,
+        trainingRunId,
+        name || `Checkpoint Step ${step}`,
+        step || 0,
+        loss || 0.0
+      );
+      res.status(201).json(checkpoint);
+    } catch (error) {
+      res.status(400).json({ error: error instanceof Error ? error.message : 'Failed to create checkpoint' });
+    }
+  });
+
   app.get('/api/checkpoints/:id', async (req, res) => {
     try {
       const id = parseInt(req.params.id);
