@@ -27,7 +27,8 @@ export function useTraining() {
     save_scheduler_state: true,
     save_random_states: true,
     verify_integrity: true,
-    max_checkpoints: 10,
+    max_checkpoints: 100,
+    auto_save_interval: 1000,
     enable_weight_logging: false,
     weight_verification: false,
   });

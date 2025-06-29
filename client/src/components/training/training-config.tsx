@@ -216,6 +216,16 @@ export function TrainingConfig() {
 
             <ParameterControl
               config={{
+                label: 'Auto Save Interval',
+                description: 'Steps between automatic checkpoint saves',
+                type: 'number'
+              }}
+              value={config.auto_save_interval}
+              onChange={(value) => updateConfig({ auto_save_interval: value })}
+            />
+
+            <ParameterControl
+              config={{
                 label: 'Random Seed',
                 description: 'Seed for reproducibility',
                 type: 'number'

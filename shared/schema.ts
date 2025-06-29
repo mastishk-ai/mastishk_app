@@ -220,12 +220,13 @@ export const TrainingConfigSchema = z.object({
   use_tensorboard: z.boolean().default(false),
   seed: z.number().default(42),
   
-  // Checkpoint settings
+  // Enhanced checkpoint settings
   save_optimizer_state: z.boolean().default(true),
   save_scheduler_state: z.boolean().default(true),
   save_random_states: z.boolean().default(true),
   verify_integrity: z.boolean().default(true),
-  max_checkpoints: z.number().default(10),
+  max_checkpoints: z.number().default(100),
+  auto_save_interval: z.number().default(1000),
   
   // Weight logging and verification
   enable_weight_logging: z.boolean().default(false),
