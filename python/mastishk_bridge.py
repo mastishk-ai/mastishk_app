@@ -9,9 +9,11 @@ import json
 import os
 import traceback
 import time
+import random
 from pathlib import Path
 from typing import Dict, Any, Optional
 from datetime import datetime
+from dataclasses import dataclass, asdict
 
 # Add current directory to path for imports
 current_dir = Path(__file__).parent
@@ -22,10 +24,27 @@ try:
     import torch
     import torch.nn as nn
     import numpy as np
-    from dataclasses import dataclass, asdict
     TORCH_AVAILABLE = True
 except ImportError:
     TORCH_AVAILABLE = False
+    # Create fallback numpy if not available
+    class MockNumpy:
+        @staticmethod
+        def random():
+            class MockRandom:
+                @staticmethod
+                def uniform(low, high):
+                    import random
+                    return random.uniform(low, high)
+                @staticmethod
+                def get_state():
+                    return {'state': 'mock'}
+                @staticmethod 
+                def set_state(state):
+                    pass
+            return MockRandom()
+    
+    np = MockNumpy()
 
 @dataclass
 class MastishkConfig:
