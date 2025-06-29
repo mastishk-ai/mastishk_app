@@ -180,6 +180,18 @@ export function Sidebar({ modelStatus }: SidebarProps) {
           </p>
         </div>
       </div>
+
+      {/* Copyright */}
+      <div className="p-4 border-t border-border/50 mt-auto">
+        <div className="text-center">
+          <p className="text-xs text-muted-foreground">
+            © 2025 <span className="font-semibold">Aman Sharma</span>
+          </p>
+          <p className="text-xs text-muted-foreground/70 mt-1">
+            All rights reserved
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

@@ -97,6 +97,16 @@ Mastishk Transformer Studio is an advanced transformer experimentation platform 
 
 ## Changelog
 
+- June 29, 2025: Updated branding and copyright information
+  - Changed application name from "AI Transformer Platform" to "Mastishk" with bold styling
+  - Added "Transformer Studio" subtitle for clarity
+  - Integrated copyright notice "© 2025 Aman Sharma" in sidebar and header
+  - Enhanced branding consistency across all components
+- June 29, 2025: Fixed text alignment and overflow issues throughout application
+  - Resolved Quick Presets section text overflow problems
+  - Added comprehensive CSS utilities for text truncation and line clamping
+  - Implemented responsive design improvements for better mobile/tablet display
+  - Enhanced navigation items with proper text containment
 - June 29, 2025: Implemented premium UI design system
   - Created modern glass-effect design with premium styling throughout application
   - Enhanced color scheme with sophisticated purple-blue gradient primary colors
