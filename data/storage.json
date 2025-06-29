@@ -26,6 +26,19 @@
       "status": "idle",
       "createdAt": "2025-06-29T10:21:01.694Z",
       "updatedAt": "2025-06-29T10:21:01.694Z"
+    },
+    {
+      "name": "Test Dropdown Model",
+      "config": {
+        "hidden_size": 512,
+        "num_hidden_layers": 8,
+        "num_attention_heads": 8,
+        "vocab_size": 50257
+      },
+      "id": 3,
+      "status": "idle",
+      "createdAt": "2025-06-29T10:24:52.806Z",
+      "updatedAt": "2025-06-29T10:24:52.806Z"
     }
   ],
   "trainingRuns": [],
@@ -34,7 +47,7 @@
   "trainingMetrics": [],
   "counters": {
     "userId": 1,
-    "modelId": 3,
+    "modelId": 4,
     "trainingRunId": 1,
     "checkpointId": 1,
     "generationId": 1,

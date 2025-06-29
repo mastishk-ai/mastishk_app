@@ -104,19 +104,23 @@ export function useModelConfig() {
       });
       return response.json();
     },
-    onSuccess: (data) => {
-      // Invalidate all model-related queries to ensure immediate UI updates
-      queryClient.invalidateQueries({ queryKey: ['/api/models'] });
+    onSuccess: async (data) => {
+      console.log('🎉 Model created successfully:', data);
+      
+      // Force immediate cache invalidation and refetch
+      await queryClient.invalidateQueries({ queryKey: ['/api/models'] });
+      await queryClient.refetchQueries({ queryKey: ['/api/models'] });
+      
+      // Invalidate related queries
       queryClient.invalidateQueries({ queryKey: ['/api/training-runs'] });
       queryClient.invalidateQueries({ queryKey: ['/api/checkpoints'] });
       
-      // Refetch models to ensure immediate availability in dropdowns
-      queryClient.refetchQueries({ queryKey: ['/api/models'] });
+      console.log('💾 Cache invalidated and refetched for models');
       
       // Show success notification
       toast({
         title: "Model Created Successfully",
-        description: `Model "${data.name}" is now available for training`,
+        description: `Model "${data.name}" is now available in dropdowns`,
       });
     },
     onError: (error) => {
