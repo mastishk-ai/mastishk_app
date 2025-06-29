@@ -1,10 +1,12 @@
 import { useLocation } from "wouter";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
 import { useWebSocket } from "@/hooks/use-websocket";
 import { useModelConfig } from "@/hooks/use-model-config";
 import { useTraining } from "@/hooks/use-training";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 
 // Import page components
 import { ModelConfigPage } from "@/components/model-config/model-config-page";
@@ -20,6 +22,51 @@ export default function Dashboard() {
   const [location] = useLocation();
   const { isConnected } = useWebSocket();
   const { trainingStatus } = useTraining();
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  // Model creation mutation
+  const createModelMutation = useMutation({
+    mutationFn: async (modelData: { name: string; config: any }) => {
+      console.log('🚀 Starting model creation for:', modelData.name);
+      const response = await fetch('/api/models', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(modelData)
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to create model');
+      }
+      
+      const data = await response.json();
+      console.log('🎉 Model created successfully:', data);
+      return data;
+    },
+    onSuccess: (data) => {
+      console.log('📊 Current models in cache before invalidation:', queryClient.getQueryData(['/api/models']));
+      
+      // Invalidate and refetch models
+      queryClient.invalidateQueries({ queryKey: ['/api/models'] });
+      
+      toast({
+        title: "Model Created",
+        description: `Model "${data.name}" created successfully`
+      });
+      
+      console.log('✅ Cache invalidated, model creation complete');
+    },
+    onError: (error) => {
+      console.error('❌ Model creation failed:', error);
+      toast({
+        title: "Creation Failed",
+        description: "Failed to create model. Please try again.",
+        variant: "destructive"
+      });
+    }
+  });
 
   // Get page info based on current route
   const getPageInfo = (path: string) => {
@@ -86,39 +133,49 @@ export default function Dashboard() {
       case "/docs":
         return <DocumentationPage />;
       default:
+        // Get current config state - you might want to move this to a state variable
+        const currentConfig = {
+          hidden_size: 768,
+          num_hidden_layers: 12,
+          num_attention_heads: 12,
+          intermediate_size: 3072,
+          vocab_size: 50257,
+          max_position_embeddings: 2048,
+          hidden_act: 'swish',
+          num_key_value_heads: 12,
+          use_flash_attention: false,
+          use_differential_attention: false,
+          differential_lambda_init: 0.5,
+          use_minimax: false,
+          minimax_layer_frequency: 4,
+          minimax_adversarial_epsilon: 0.1,
+          minimax_iterations: 3,
+          lolcats_enabled: false,
+          lolcats_compression_dim: 512,
+          use_multi_token_prediction: false,
+          n_predict_tokens: 4,
+          rms_norm_eps: 1e-5,
+          initializer_range: 0.02,
+          use_moe: false,
+          use_mod: false
+        };
+
         return <ModelConfigPage 
-          config={{
-            hidden_size: 768,
-            num_hidden_layers: 12,
-            num_attention_heads: 12,
-            intermediate_size: 3072,
-            vocab_size: 50257,
-            max_position_embeddings: 2048,
-            hidden_act: 'swish',
-            num_key_value_heads: 12,
-            use_flash_attention: false,
-            use_differential_attention: false,
-            differential_lambda_init: 0.5,
-            use_minimax: false,
-            minimax_layer_frequency: 4,
-            minimax_adversarial_epsilon: 0.1,
-            minimax_iterations: 3,
-            lolcats_enabled: false,
-            lolcats_compression_dim: 512,
-            use_multi_token_prediction: false,
-            n_predict_tokens: 4,
-            rms_norm_eps: 1e-5,
-            initializer_range: 0.02,
-            use_moe: false,
-            use_mod: false
-          }}
+          config={currentConfig}
           onUpdate={(updates) => {
             console.log('Dashboard: Model config updated with:', updates);
+            // Here you would typically update the state with the new config
           }}
           onUpdateMoe={() => {}}
           onUpdateMod={() => {}}
-          onCreateModel={() => {}}
-          isCreating={false}
+          onCreateModel={(modelData) => {
+            console.log('Dashboard: Creating model with data:', modelData);
+            createModelMutation.mutate({
+              name: modelData.name,
+              config: currentConfig
+            });
+          }}
+          isCreating={createModelMutation.isPending}
           validateConfig={() => []}
         />;
     }

@@ -189,7 +189,13 @@ export function ModelConfigPage({
           <div className="space-y-3">
             <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
               <DialogTrigger asChild>
-                <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
+                <Button 
+                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+                  onClick={() => {
+                    console.log('🚀 Create Model button clicked!');
+                    setShowCreateDialog(true);
+                  }}
+                >
                   Create Model
                 </Button>
               </DialogTrigger>
@@ -212,7 +218,10 @@ export function ModelConfigPage({
                       Cancel
                     </Button>
                     <Button 
-                      onClick={handleCreateModel}
+                      onClick={() => {
+                        console.log('🎯 Create Model dialog button clicked!');
+                        handleCreateModel();
+                      }}
                       disabled={isCreating}
                     >
                       {isCreating ? 'Creating...' : 'Create Model'}
