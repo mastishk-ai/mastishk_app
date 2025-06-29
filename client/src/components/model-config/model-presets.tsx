@@ -163,7 +163,7 @@ export function ModelPresets({ onApplyPreset }: ModelPresetsProps) {
             <Button
               key={preset.name}
               variant="outline"
-              className="p-4 h-auto text-left overflow-hidden"
+              className="p-4 h-auto text-left overflow-hidden bg-background text-foreground border-border hover:bg-muted hover:text-foreground"
               onClick={() => onApplyPreset(preset.config)}
             >
               <div className="w-full overflow-hidden">

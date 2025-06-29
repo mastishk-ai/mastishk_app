@@ -155,7 +155,7 @@ export function ModelConfigPage({
           <div className="space-y-3">
             <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
               <DialogTrigger asChild>
-                <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
                   Create Model
                 </Button>
               </DialogTrigger>
