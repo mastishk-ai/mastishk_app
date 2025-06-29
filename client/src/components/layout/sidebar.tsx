@@ -164,16 +164,16 @@ export function Sidebar({ modelStatus }: SidebarProps) {
 
       {/* Model Status */}
       <div className="p-6 border-t border-border/50">
-        <div className="premium-card rounded-2xl p-5">
+        <div className="premium-card rounded-2xl p-5 content-container">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-sm font-bold text-foreground">Model Status</span>
+            <span className="text-sm font-bold text-foreground text-truncate">Model Status</span>
             <div className={cn(
-              "w-3 h-3 rounded-full shadow-lg",
+              "w-3 h-3 rounded-full shadow-lg flex-shrink-0",
               modelStatus?.status === 'training' ? "bg-emerald-500 shadow-emerald-500/50 animate-pulse" :
               modelStatus?.status === 'ready' ? "bg-blue-500 shadow-blue-500/50" : "bg-slate-400"
             )} />
           </div>
-          <p className="text-xs text-muted-foreground font-medium leading-relaxed">
+          <p className="text-xs text-muted-foreground font-medium leading-relaxed break-words">
             {modelStatus?.status === 'training' ? 'Currently training model...' :
              modelStatus?.status === 'ready' ? `Ready to use • ${modelStatus?.lastTrained || 'Recently'}` :
              'No model configured yet'}
