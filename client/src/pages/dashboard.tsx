@@ -49,8 +49,8 @@ export default function Dashboard() {
         };
       default:
         return {
-          title: "Model Configuration",
-          subtitle: "Configure your Mastishk Transformer parameters"
+          title: "Mastishk Configuration",
+          subtitle: "Configure your transformer architecture and parameters"
         };
     }
   };
