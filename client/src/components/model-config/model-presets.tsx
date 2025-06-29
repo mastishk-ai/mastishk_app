@@ -150,25 +150,25 @@ export function ModelPresets({ onApplyPreset }: ModelPresetsProps) {
   ];
 
   return (
-    <Card className="flex-1">
-      <CardHeader>
-        <CardTitle className="flex items-center">
-          <Zap className="w-5 h-5 mr-2 text-yellow-500" />
-          Quick Presets
+    <Card className="flex-1 premium-card">
+      <CardHeader className="pb-3">
+        <CardTitle className="flex items-center gap-2 text-lg text-truncate">
+          <Zap className="w-5 h-5 text-yellow-500 flex-shrink-0" />
+          <span className="text-truncate">Quick Presets</span>
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="card-content-spacing">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {presets.map((preset) => (
             <Button
               key={preset.name}
               variant="outline"
-              className="p-4 h-auto text-left"
+              className="p-4 h-auto text-left overflow-hidden"
               onClick={() => onApplyPreset(preset.config)}
             >
-              <div>
-                <div className="font-medium text-foreground">{preset.name}</div>
-                <div className="text-xs text-muted-foreground mt-1">{preset.description}</div>
+              <div className="w-full overflow-hidden">
+                <div className="font-medium text-foreground text-truncate">{preset.name}</div>
+                <div className="text-xs text-muted-foreground mt-1 break-words line-clamp-2">{preset.description}</div>
               </div>
             </Button>
           ))}

@@ -145,12 +145,12 @@ export function ModelConfigPage({
         <ModelPresets onApplyPreset={onUpdate} />
         
         {/* Configuration Actions */}
-        <div className="flex-1 bg-card rounded-xl border p-6">
-          <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center">
-            <svg className="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="flex-1 premium-card rounded-xl p-6 content-container">
+          <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2 text-truncate">
+            <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-3a2 2 0 00-2 2v1a2 2 0 01-2 2H9a2 2 0 01-2-2v-1a2 2 0 00-2-2H2" />
             </svg>
-            Configuration
+            <span className="text-truncate">Configuration</span>
           </h3>
           <div className="space-y-3">
             <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
