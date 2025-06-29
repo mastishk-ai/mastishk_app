@@ -18,6 +18,7 @@ export function useModelConfig() {
     max_position_embeddings: 4096,
     initializer_range: 0.02,
     rms_norm_eps: 1e-5,
+    learning_rate: 5e-4,
     
     // Advanced features
     use_flash_attention: true,

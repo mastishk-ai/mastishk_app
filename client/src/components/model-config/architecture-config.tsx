@@ -27,7 +27,8 @@ export function ArchitectureConfig({ config, onUpdate }: ArchitectureConfigProps
     lolcats_enabled: false,
     use_multi_token_prediction: false,
     rms_norm_eps: 1e-5,
-    initializer_range: 0.02
+    initializer_range: 0.02,
+    learning_rate: 5e-4
   };
   const coreParameters = [
     {
@@ -175,6 +176,17 @@ export function ArchitectureConfig({ config, onUpdate }: ArchitectureConfigProps
               }}
               value={safeConfig.initializer_range}
               onChange={(value) => onUpdate({ ...safeConfig, initializer_range: value })}
+            />
+            
+            <ParameterControl
+              config={{
+                label: 'Learning Rate',
+                description: 'Model training learning rate (1e-6 to 1e-1)',
+                type: 'range',
+                range: { min: 1e-6, max: 1e-1, step: 1e-6, default: 5e-4 }
+              }}
+              value={safeConfig.learning_rate || 5e-4}
+              onChange={(value) => onUpdate({ ...safeConfig, learning_rate: value })}
             />
             
             <ParameterControl

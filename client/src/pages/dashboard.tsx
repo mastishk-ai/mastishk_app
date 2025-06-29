@@ -50,6 +50,7 @@ export default function Dashboard() {
     n_predict_tokens: 4,
     rms_norm_eps: 1e-5,
     initializer_range: 0.02,
+    learning_rate: 5e-4,
     use_moe: false,
     use_mod: false
   });

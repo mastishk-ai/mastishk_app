@@ -152,6 +152,7 @@ export const ModelConfigSchema = z.object({
   max_position_embeddings: z.number().min(512).max(262144).default(4096),
   initializer_range: z.number().default(0.02),
   rms_norm_eps: z.number().default(1e-5),
+  learning_rate: z.number().min(1e-6).max(1e-1).default(5e-4),
   
   // Advanced features
   use_flash_attention: z.boolean().default(true),
