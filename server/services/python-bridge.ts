@@ -34,7 +34,7 @@ export class PythonBridge extends EventEmitter {
     if (this.isInitialized) return;
 
     const pythonPath = path.join(process.cwd(), 'python');
-    const scriptPath = path.join(pythonPath, 'mastishk_bridge.py');
+    const scriptPath = path.join(pythonPath, 'enhanced_mastishk_bridge.py');
 
     try {
       // Verify Python script exists
