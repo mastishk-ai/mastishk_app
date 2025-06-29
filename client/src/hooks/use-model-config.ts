@@ -98,24 +98,41 @@ export function useModelConfig() {
 
   const createModelMutation = useMutation({
     mutationFn: async ({ name }: { name: string }) => {
+      console.log('🚀 Starting model creation for:', name);
+      console.log('📋 Using config:', config);
+      
       const response = await apiRequest('POST', '/api/models', {
         name,
         config,
       });
-      return response.json();
+      
+      const result = await response.json();
+      console.log('✅ Model creation API response:', result);
+      return result;
     },
     onSuccess: async (data) => {
       console.log('🎉 Model created successfully:', data);
       
+      // Log current cache state before invalidation
+      const currentModels = queryClient.getQueryData(['/api/models']);
+      console.log('📊 Current models in cache before invalidation:', currentModels);
+      
       // Force immediate cache invalidation and refetch
+      console.log('🔄 Invalidating models cache...');
       await queryClient.invalidateQueries({ queryKey: ['/api/models'] });
+      
+      console.log('🔄 Refetching models...');
       await queryClient.refetchQueries({ queryKey: ['/api/models'] });
+      
+      // Check cache state after refetch
+      const updatedModels = queryClient.getQueryData(['/api/models']);
+      console.log('📊 Updated models in cache after refetch:', updatedModels);
       
       // Invalidate related queries
       queryClient.invalidateQueries({ queryKey: ['/api/training-runs'] });
       queryClient.invalidateQueries({ queryKey: ['/api/checkpoints'] });
       
-      console.log('💾 Cache invalidated and refetched for models');
+      console.log('💾 Cache operations completed for model:', data.name);
       
       // Show success notification
       toast({
@@ -124,6 +141,7 @@ export function useModelConfig() {
       });
     },
     onError: (error) => {
+      console.error('❌ Model creation failed:', error);
       toast({
         title: "Model Creation Failed",
         description: error instanceof Error ? error.message : "Failed to create model",
