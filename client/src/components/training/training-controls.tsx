@@ -175,16 +175,21 @@ export function TrainingControls() {
                     onChange={(e) => setSelectedModelId(e.target.value ? Number(e.target.value) : null)}
                   >
                     <option value="">
-                      {modelsLoading ? 'Loading models...' : models.length === 0 ? 'No models available' : 'Select a model...'}
+                      {modelsLoading ? 'Loading models...' : 'Select a model...'}
                     </option>
-                    {models && models.length > 0 && models.map((model) => (
+                    {models.map((model) => (
                       <option key={model.id} value={model.id}>
                         {model.name} ({model.status})
                       </option>
                     ))}
                     {!modelsLoading && models.length === 0 && (
                       <option value="" disabled>
-                        Create a model in Model Configuration first
+                        No models found - Create one in Model Configuration
+                      </option>
+                    )}
+                    {modelsError && (
+                      <option value="" disabled>
+                        Error loading models - Check console
                       </option>
                     )}
                   </select>
