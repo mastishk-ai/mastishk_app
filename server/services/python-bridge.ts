@@ -197,6 +197,10 @@ export class PythonBridge extends EventEmitter {
     await this.waitForMessage('checkpoint_loaded');
   }
 
+  isAvailable(): boolean {
+    return this.isInitialized && this.process !== null;
+  }
+
   async cleanup(): Promise<void> {
     if (this.process) {
       this.sendMessage({

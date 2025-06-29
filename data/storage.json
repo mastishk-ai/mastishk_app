@@ -150,7 +150,7 @@
       "id": 7,
       "status": "ready",
       "createdAt": "2025-06-29T11:13:11.904Z",
-      "updatedAt": "2025-06-29T11:25:27.597Z"
+      "updatedAt": "2025-06-29T11:27:47.646Z"
     }
   ],
   "trainingRuns": [
@@ -433,9 +433,72 @@
       "startedAt": "2025-06-29T11:17:33.614Z",
       "completedAt": null,
       "createdAt": "2025-06-29T11:17:33.495Z"
+    },
+    {
+      "modelId": 7,
+      "name": "test1",
+      "config": {
+        "learning_rate": 0.0005,
+        "batch_size": 2,
+        "gradient_accumulation_steps": 4,
+        "max_steps": 10000,
+        "eval_steps": 500,
+        "save_steps": 1000,
+        "warmup_steps": 100,
+        "max_grad_norm": 1,
+        "weight_decay": 0.01,
+        "mixed_precision": true,
+        "gradient_checkpointing": true,
+        "early_stopping": false,
+        "early_stopping_patience": 5,
+        "early_stopping_threshold": 0.0001,
+        "use_wandb": false,
+        "use_tensorboard": false,
+        "seed": 42,
+        "save_optimizer_state": true,
+        "save_scheduler_state": true,
+        "save_random_states": true,
+        "verify_integrity": true,
+        "max_checkpoints": 100,
+        "auto_save_interval": 1000,
+        "enable_weight_logging": false,
+        "weight_verification": false
+      },
+      "totalSteps": 10000,
+      "id": 8,
+      "status": "stopped",
+      "currentStep": 11,
+      "currentLoss": 2.5154,
+      "learningRate": 0.0005,
+      "startedAt": "2025-06-29T11:27:25.274Z",
+      "completedAt": "2025-06-29T11:27:47.643Z",
+      "createdAt": "2025-06-29T11:27:25.260Z"
     }
   ],
-  "checkpoints": [],
+  "checkpoints": [
+    {
+      "modelId": 1,
+      "trainingRunId": null,
+      "name": "Test Checkpoint",
+      "step": 100,
+      "loss": 0.5,
+      "filePath": "/home/runner/workspace/checkpoints/Test Checkpoint.pt",
+      "fileSize": 509,
+      "metadata": {
+        "created_by": "manual",
+        "step": 100,
+        "loss": 0.5,
+        "file_hash": "0d310ae6b33c342e263ce7438fc288f0ed8dc1dac6040ff39af0b77324c56098",
+        "comprehensive": true,
+        "includes_optimizer_state": true,
+        "includes_scheduler_state": true,
+        "includes_random_states": true
+      },
+      "id": 2,
+      "isBest": true,
+      "createdAt": "2025-06-29T11:32:14.661Z"
+    }
+  ],
   "generations": [],
   "trainingMetrics": [
     {
@@ -1721,14 +1784,146 @@
       "layerSkipRate": null,
       "id": 107,
       "timestamp": "2025-06-29T10:58:07.189Z"
+    },
+    {
+      "trainingRunId": 8,
+      "step": 1,
+      "loss": 2.5861,
+      "learningRate": 0.0005,
+      "gpuUtilization": 87.08217673443377,
+      "memoryUsage": 80.74523575550198,
+      "expertUtilization": null,
+      "layerSkipRate": null,
+      "id": 108,
+      "timestamp": "2025-06-29T11:27:27.377Z"
+    },
+    {
+      "trainingRunId": 8,
+      "step": 2,
+      "loss": 2.5398,
+      "learningRate": 0.0005,
+      "gpuUtilization": 86.78281897087707,
+      "memoryUsage": 73.04129504306341,
+      "expertUtilization": null,
+      "layerSkipRate": null,
+      "id": 109,
+      "timestamp": "2025-06-29T11:27:29.377Z"
+    },
+    {
+      "trainingRunId": 8,
+      "step": 3,
+      "loss": 2.5529,
+      "learningRate": 0.0005,
+      "gpuUtilization": 86.0183544589676,
+      "memoryUsage": 83.54917966304073,
+      "expertUtilization": null,
+      "layerSkipRate": null,
+      "id": 110,
+      "timestamp": "2025-06-29T11:27:31.379Z"
+    },
+    {
+      "trainingRunId": 8,
+      "step": 4,
+      "loss": 2.5596,
+      "learningRate": 0.0005,
+      "gpuUtilization": 91.91288446269033,
+      "memoryUsage": 77.3955625159085,
+      "expertUtilization": null,
+      "layerSkipRate": null,
+      "id": 111,
+      "timestamp": "2025-06-29T11:27:33.379Z"
+    },
+    {
+      "trainingRunId": 8,
+      "step": 5,
+      "loss": 2.5203,
+      "learningRate": 0.0005,
+      "gpuUtilization": 86.19091195078907,
+      "memoryUsage": 76.0094522128917,
+      "expertUtilization": null,
+      "layerSkipRate": null,
+      "id": 112,
+      "timestamp": "2025-06-29T11:27:35.379Z"
+    },
+    {
+      "trainingRunId": 8,
+      "step": 6,
+      "loss": 2.5287,
+      "learningRate": 0.0005,
+      "gpuUtilization": 94.05380465268442,
+      "memoryUsage": 73.46353391613991,
+      "expertUtilization": null,
+      "layerSkipRate": null,
+      "id": 113,
+      "timestamp": "2025-06-29T11:27:37.380Z"
+    },
+    {
+      "trainingRunId": 8,
+      "step": 7,
+      "loss": 2.5616,
+      "learningRate": 0.0005,
+      "gpuUtilization": 86.26881807048565,
+      "memoryUsage": 70.95348522893272,
+      "expertUtilization": null,
+      "layerSkipRate": null,
+      "id": 114,
+      "timestamp": "2025-06-29T11:27:39.381Z"
+    },
+    {
+      "trainingRunId": 8,
+      "step": 8,
+      "loss": 2.5007,
+      "learningRate": 0.0005,
+      "gpuUtilization": 87.71456047323171,
+      "memoryUsage": 78.62707650577933,
+      "expertUtilization": null,
+      "layerSkipRate": null,
+      "id": 115,
+      "timestamp": "2025-06-29T11:27:41.381Z"
+    },
+    {
+      "trainingRunId": 8,
+      "step": 9,
+      "loss": 2.5859,
+      "learningRate": 0.0005,
+      "gpuUtilization": 87.98992541121177,
+      "memoryUsage": 83.75939653025128,
+      "expertUtilization": null,
+      "layerSkipRate": null,
+      "id": 116,
+      "timestamp": "2025-06-29T11:27:43.382Z"
+    },
+    {
+      "trainingRunId": 8,
+      "step": 10,
+      "loss": 2.4979,
+      "learningRate": 0.0005,
+      "gpuUtilization": 88.77060240621134,
+      "memoryUsage": 72.95867920142453,
+      "expertUtilization": null,
+      "layerSkipRate": null,
+      "id": 117,
+      "timestamp": "2025-06-29T11:27:45.381Z"
+    },
+    {
+      "trainingRunId": 8,
+      "step": 11,
+      "loss": 2.5154,
+      "learningRate": 0.0005,
+      "gpuUtilization": 94.89866611769173,
+      "memoryUsage": 84.93477084831648,
+      "expertUtilization": null,
+      "layerSkipRate": null,
+      "id": 118,
+      "timestamp": "2025-06-29T11:27:47.382Z"
     }
   ],
   "counters": {
     "userId": 1,
     "modelId": 8,
-    "trainingRunId": 8,
-    "checkpointId": 2,
+    "trainingRunId": 9,
+    "checkpointId": 3,
     "generationId": 1,
-    "metricId": 108
+    "metricId": 119
   }
 }
