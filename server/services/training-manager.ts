@@ -169,7 +169,8 @@ export class TrainingManager extends EventEmitter {
     await storage.updateModel(checkpoint.modelId, { status: 'training' });
 
     try {
-      console.log(`Resuming training from checkpoint ${checkpoint.name} at step ${checkpoint.step}`);
+      console.log(`🔄 CHECKPOINT RESUME: Starting from checkpoint "${checkpoint.name}" at step ${checkpoint.step}`);
+      console.log(`📊 Training will continue from step ${checkpoint.step} to ${config.max_steps}`);
       
       // Start training simulation from checkpoint step
       setTimeout(() => this.simulateResumedTraining(trainingRun, config, checkpoint.step), 100);

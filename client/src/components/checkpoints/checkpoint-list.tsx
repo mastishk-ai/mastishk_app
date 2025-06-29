@@ -102,8 +102,9 @@ export function CheckpointList() {
       queryClient.invalidateQueries({ queryKey: ['/api/training-runs'] });
       queryClient.invalidateQueries({ queryKey: ['/api/training/status'] });
       toast({
-        title: "Training Resumed",
-        description: "Training has been resumed from checkpoint"
+        title: "Training Resumed Successfully",
+        description: `Training has resumed from ${selectedCheckpoint?.name} at step ${selectedCheckpoint?.step}`,
+        duration: 5000
       });
     },
     onError: (error) => {

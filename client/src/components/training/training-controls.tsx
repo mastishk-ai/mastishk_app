@@ -124,7 +124,17 @@ export function TrainingControls() {
         {activeRun && (
           <div className="p-4 bg-muted rounded-lg border">
             <div className="flex items-center justify-between mb-2">
-              <h4 className="font-medium text-foreground">{activeRun.name}</h4>
+              <div>
+                <h4 className="font-medium text-foreground">{activeRun.name}</h4>
+                {activeRun.name.includes("Resume from") && (
+                  <div className="flex items-center mt-1">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
+                    <span className="text-xs font-medium text-blue-600">
+                      Resumed from checkpoint step {activeRun.currentStep || 0}
+                    </span>
+                  </div>
+                )}
+              </div>
               <Badge variant="outline">
                 Step {activeRun.currentStep || 0} / {activeRun.totalSteps}
               </Badge>

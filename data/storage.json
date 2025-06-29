@@ -148,9 +148,24 @@
         "use_mod": false
       },
       "id": 7,
-      "status": "ready",
+      "status": "training",
       "createdAt": "2025-06-29T11:13:11.904Z",
-      "updatedAt": "2025-06-29T11:52:56.401Z"
+      "updatedAt": "2025-06-29T12:14:17.169Z"
+    },
+    {
+      "name": "Checkpoint Test Model",
+      "config": {
+        "vocab_size": 50257,
+        "n_positions": 1024,
+        "n_embd": 768,
+        "n_layer": 12,
+        "n_head": 12,
+        "learning_rate": 0.0005
+      },
+      "id": 8,
+      "status": "ready",
+      "createdAt": "2025-06-29T12:17:51.266Z",
+      "updatedAt": "2025-06-29T12:17:51.266Z"
     }
   ],
   "trainingRuns": [
@@ -513,6 +528,46 @@
       "startedAt": "2025-06-29T11:52:28.853Z",
       "completedAt": "2025-06-29T11:52:56.400Z",
       "createdAt": "2025-06-29T11:52:28.831Z"
+    },
+    {
+      "modelId": 7,
+      "name": "Resume from Manual Checkpoint Step 339",
+      "config": {
+        "learning_rate": 0.0005,
+        "batch_size": 32,
+        "gradient_accumulation_steps": 4,
+        "max_steps": 100,
+        "eval_steps": 500,
+        "save_steps": 1000,
+        "warmup_steps": 100,
+        "max_grad_norm": 1,
+        "weight_decay": 0.01,
+        "mixed_precision": true,
+        "gradient_checkpointing": true,
+        "early_stopping": false,
+        "early_stopping_patience": 5,
+        "early_stopping_threshold": 0.0001,
+        "use_wandb": false,
+        "use_tensorboard": false,
+        "seed": 42,
+        "save_optimizer_state": true,
+        "save_scheduler_state": true,
+        "save_random_states": true,
+        "verify_integrity": true,
+        "max_checkpoints": 100,
+        "auto_save_interval": 1000,
+        "enable_weight_logging": false,
+        "weight_verification": false
+      },
+      "totalSteps": 100,
+      "id": 10,
+      "status": "completed",
+      "currentStep": 340,
+      "currentLoss": 0.0298,
+      "learningRate": 0.0005,
+      "startedAt": "2025-06-29T12:14:17.232Z",
+      "completedAt": "2025-06-29T12:14:19.339Z",
+      "createdAt": "2025-06-29T12:14:17.168Z"
     }
   ],
   "checkpoints": [],
@@ -2089,14 +2144,26 @@
       "layerSkipRate": null,
       "id": 131,
       "timestamp": "2025-06-29T11:52:54.961Z"
+    },
+    {
+      "trainingRunId": 10,
+      "step": 340,
+      "loss": 0.0298,
+      "learningRate": 0.0005,
+      "gpuUtilization": 86.20648496714614,
+      "memoryUsage": 81.62000825795849,
+      "expertUtilization": null,
+      "layerSkipRate": null,
+      "id": 132,
+      "timestamp": "2025-06-29T12:14:19.335Z"
     }
   ],
   "counters": {
     "userId": 1,
-    "modelId": 8,
-    "trainingRunId": 10,
-    "checkpointId": 4,
+    "modelId": 9,
+    "trainingRunId": 11,
+    "checkpointId": 5,
     "generationId": 1,
-    "metricId": 132
+    "metricId": 133
   }
 }
