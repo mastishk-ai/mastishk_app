@@ -4,7 +4,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { ThreeDVisualizer } from '@/components/3d-visualizer';
 import { AdvancedThreeDViewer } from '@/components/advanced-3d-viewer';
-import { Box, Zap, Sparkles } from 'lucide-react';
+import { GenerativeArchitecture3D } from '@/components/enhanced-generative-3d';
+import { Box, Zap, Sparkles, Layers } from 'lucide-react';
 
 export default function VisualizationPage() {
   return (
@@ -29,7 +30,7 @@ export default function VisualizationPage() {
         </div>
 
         <Tabs defaultValue="plotly" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="plotly" className="flex items-center gap-2">
               <Box className="w-4 h-4" />
               3D Model Visualizations
@@ -37,6 +38,10 @@ export default function VisualizationPage() {
             <TabsTrigger value="threejs" className="flex items-center gap-2">
               <Zap className="w-4 h-4" />
               Advanced 3D Neural Network
+            </TabsTrigger>
+            <TabsTrigger value="generative" className="flex items-center gap-2">
+              <Layers className="w-4 h-4" />
+              Generative Architecture
             </TabsTrigger>
           </TabsList>
 
@@ -72,6 +77,34 @@ export default function VisualizationPage() {
               </CardHeader>
               <CardContent>
                 <AdvancedThreeDViewer />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="generative" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Layers className="w-5 h-5" />
+                  Enhanced Generative Transformer Architecture
+                </CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  Detailed 3D visualization of your generative transformer with token flow, 
+                  layer-by-layer exploration, and interactive architecture controls
+                </p>
+              </CardHeader>
+              <CardContent>
+                <GenerativeArchitecture3D 
+                  modelConfig={{
+                    hidden_size: 4096,
+                    num_hidden_layers: 32,
+                    num_attention_heads: 32,
+                    vocab_size: 32000,
+                    intermediate_size: 11008,
+                    use_moe: false,
+                    use_mod: false
+                  }}
+                />
               </CardContent>
             </Card>
           </TabsContent>

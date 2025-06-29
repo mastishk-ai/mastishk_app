@@ -97,6 +97,13 @@ Mastishk Transformer Studio is an advanced transformer experimentation platform 
 
 ## Changelog
 
+- June 29, 2025: Enhanced 3D generative transformer architecture visualization
+  - Created specialized GenerativeArchitecture3D component for transformer visualization
+  - Added three interactive view modes: Overview, Layer-by-layer, and Token Flow
+  - Implemented animation controls for layer progression exploration
+  - Enhanced visual representation with token flow, attention rings, and MLP chains
+  - Added architecture details panel with real-time parameter display
+  - Integrated as third tab in visualization page for comprehensive 3D architecture viewing
 - June 29, 2025: Enhanced checkpoint management system with complete state preservation
   - Optimizer momentum and state tracking for training continuity
   - Learning rate scheduler state preservation
