@@ -99,6 +99,7 @@ export function Sidebar({ modelStatus }: SidebarProps) {
           <div>
             <h1 className="text-xl font-bold text-foreground">
               <span className="font-extrabold text-primary">Mastishk</span>
+              <span className="text-xs text-muted-foreground ml-1">©</span>
             </h1>
             <p className="text-xs text-muted-foreground font-medium">
               Transformer Studio

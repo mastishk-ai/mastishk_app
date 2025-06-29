@@ -49,7 +49,7 @@ export default function Dashboard() {
         };
       default:
         return {
-          title: "Mastishk Configuration",
+          title: "Mastishk© Configuration",
           subtitle: "Configure your transformer architecture and parameters"
         };
     }
