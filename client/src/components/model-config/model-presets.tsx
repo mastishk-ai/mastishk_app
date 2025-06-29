@@ -10,9 +10,14 @@ interface ModelPresetsProps {
 
 export function ModelPresets({ onApplyPreset, currentConfig }: ModelPresetsProps) {
   
-  const handlePresetApply = (preset: any) => {
-    console.log('Applying preset:', preset.name, preset.config);
+  const handlePresetClick = (preset: any) => {
+    console.log('🚀 Preset button clicked:', preset.name);
+    console.log('📋 Preset configuration:', preset.config);
+    
+    // Apply the preset
     onApplyPreset(preset.config);
+    
+    console.log('✅ Preset applied successfully');
   };
   const presets = [
     {
@@ -169,8 +174,14 @@ export function ModelPresets({ onApplyPreset, currentConfig }: ModelPresetsProps
             <Button
               key={preset.name}
               variant="outline"
-              className="p-4 h-auto text-left overflow-hidden bg-background text-foreground border-border hover:bg-muted hover:text-foreground"
-              onClick={() => onApplyPreset(preset.config)}
+              className="p-4 h-auto text-left overflow-hidden bg-background text-foreground border-border hover:bg-primary/10 active:bg-primary/20 transition-all duration-200 cursor-pointer"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Button clicked for preset:', preset.name);
+                console.log('Preset config:', preset.config);
+                onApplyPreset(preset.config);
+              }}
             >
               <div className="w-full overflow-hidden">
                 <div className="font-medium text-foreground text-truncate">{preset.name}</div>
