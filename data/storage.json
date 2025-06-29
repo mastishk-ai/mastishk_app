@@ -1,0 +1,43 @@
+{
+  "users": [],
+  "models": [
+    {
+      "name": "GPT-2 Small File Storage",
+      "config": {
+        "hidden_size": 768,
+        "num_hidden_layers": 12,
+        "num_attention_heads": 12,
+        "vocab_size": 50257
+      },
+      "id": 1,
+      "status": "idle",
+      "createdAt": "2025-06-29T10:20:48.814Z",
+      "updatedAt": "2025-06-29T10:20:48.814Z"
+    },
+    {
+      "name": "GPT-2 Medium File Storage",
+      "config": {
+        "hidden_size": 1024,
+        "num_hidden_layers": 24,
+        "num_attention_heads": 16,
+        "vocab_size": 50257
+      },
+      "id": 2,
+      "status": "idle",
+      "createdAt": "2025-06-29T10:21:01.694Z",
+      "updatedAt": "2025-06-29T10:21:01.694Z"
+    }
+  ],
+  "trainingRuns": [],
+  "checkpoints": [],
+  "generations": [],
+  "trainingMetrics": [],
+  "counters": {
+    "userId": 1,
+    "modelId": 3,
+    "trainingRunId": 1,
+    "checkpointId": 1,
+    "generationId": 1,
+    "metricId": 1
+  }
+}
