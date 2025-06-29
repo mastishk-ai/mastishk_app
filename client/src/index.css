@@ -179,6 +179,26 @@
     overflow: hidden;
   }
 
+  /* Slider visibility improvements */
+  [data-radix-slider-track] {
+    background-color: hsl(var(--muted)) !important;
+    border: 1px solid hsl(var(--border)) !important;
+  }
+
+  [data-radix-slider-range] {
+    background-color: hsl(var(--primary)) !important;
+  }
+
+  [data-radix-slider-thumb] {
+    background-color: hsl(var(--background)) !important;
+    border: 2px solid hsl(var(--primary)) !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  [data-radix-slider-thumb]:hover {
+    background-color: hsl(var(--primary) / 0.1) !important;
+  }
+
   body {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));

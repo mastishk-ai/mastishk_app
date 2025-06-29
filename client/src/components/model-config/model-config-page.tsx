@@ -191,14 +191,14 @@ export function ModelConfigPage({
             <div className="flex space-x-2">
               <Button 
                 variant="outline" 
-                className="flex-1"
+                className="flex-1 bg-background text-foreground border-border hover:bg-muted"
                 onClick={handleExportConfig}
               >
                 Export JSON
               </Button>
               <Button 
                 variant="outline" 
-                className="flex-1"
+                className="flex-1 bg-background text-foreground border-border hover:bg-muted"
                 onClick={() => document.getElementById('config-import')?.click()}
               >
                 Import JSON
@@ -214,7 +214,7 @@ export function ModelConfigPage({
             
             <Button 
               variant="outline" 
-              className="w-full"
+              className="w-full bg-background text-foreground border-border hover:bg-muted"
               onClick={handleResetConfig}
             >
               Reset to Defaults
