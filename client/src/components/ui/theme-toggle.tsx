@@ -22,10 +22,17 @@ export function ThemeToggle() {
     const isSystemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const shouldBeDark = newTheme === 'dark' || (newTheme === 'system' && isSystemDark);
     
-    document.documentElement.classList.toggle('dark', shouldBeDark);
+    // Force remove and add the dark class to ensure it applies
+    document.documentElement.classList.remove('dark');
+    if (shouldBeDark) {
+      document.documentElement.classList.add('dark');
+    }
+    
+    console.log('Applied theme:', { newTheme, shouldBeDark, classList: document.documentElement.classList.toString() });
   };
 
   const changeTheme = (newTheme: 'light' | 'dark' | 'system') => {
+    console.log('Changing theme to:', newTheme);
     setTheme(newTheme);
     localStorage.setItem('theme', newTheme);
     applyTheme(newTheme);

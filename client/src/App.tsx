@@ -28,23 +28,45 @@ function App() {
 
   useEffect(() => {
     // Initialize theme on app start
-    const theme = localStorage.getItem('theme') || 'light';
-    const isSystemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const shouldBeDark = theme === 'dark' || (theme === 'system' && isSystemDark);
-    
-    document.documentElement.classList.toggle('dark', shouldBeDark);
+    const initializeTheme = () => {
+      const theme = localStorage.getItem('theme') || 'system';
+      const isSystemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const shouldBeDark = theme === 'dark' || (theme === 'system' && isSystemDark);
+      
+      document.documentElement.classList.toggle('dark', shouldBeDark);
+      console.log('Theme initialized:', { theme, isSystemDark, shouldBeDark });
+    };
+
+    initializeTheme();
     setMounted(true);
 
     // Listen for system theme changes
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleChange = () => {
+    const handleSystemChange = () => {
       if (localStorage.getItem('theme') === 'system') {
-        document.documentElement.classList.toggle('dark', mediaQuery.matches);
+        const shouldBeDark = mediaQuery.matches;
+        document.documentElement.classList.toggle('dark', shouldBeDark);
+        console.log('System theme changed:', shouldBeDark);
       }
     };
 
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
+    // Listen for custom theme change events
+    const handleThemeChange = (event: CustomEvent) => {
+      const newTheme = event.detail;
+      const isSystemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const shouldBeDark = newTheme === 'dark' || (newTheme === 'system' && isSystemDark);
+      
+      document.documentElement.classList.toggle('dark', shouldBeDark);
+      console.log('Theme changed:', { newTheme, shouldBeDark });
+    };
+
+    mediaQuery.addEventListener('change', handleSystemChange);
+    window.addEventListener('themeChange', handleThemeChange as EventListener);
+    
+    return () => {
+      mediaQuery.removeEventListener('change', handleSystemChange);
+      window.removeEventListener('themeChange', handleThemeChange as EventListener);
+    };
   }, []);
 
   if (!mounted) {
@@ -54,7 +76,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <div className="min-h-screen bg-background text-foreground">
+        <div className="min-h-screen bg-background text-foreground transition-colors duration-200">
           <Toaster />
           <Router />
         </div>
