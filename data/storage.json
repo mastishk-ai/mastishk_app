@@ -475,30 +475,7 @@
       "createdAt": "2025-06-29T11:27:25.260Z"
     }
   ],
-  "checkpoints": [
-    {
-      "modelId": 1,
-      "trainingRunId": null,
-      "name": "Test Checkpoint",
-      "step": 100,
-      "loss": 0.5,
-      "filePath": "/home/runner/workspace/checkpoints/Test Checkpoint.pt",
-      "fileSize": 509,
-      "metadata": {
-        "created_by": "manual",
-        "step": 100,
-        "loss": 0.5,
-        "file_hash": "0d310ae6b33c342e263ce7438fc288f0ed8dc1dac6040ff39af0b77324c56098",
-        "comprehensive": true,
-        "includes_optimizer_state": true,
-        "includes_scheduler_state": true,
-        "includes_random_states": true
-      },
-      "id": 2,
-      "isBest": true,
-      "createdAt": "2025-06-29T11:32:14.661Z"
-    }
-  ],
+  "checkpoints": [],
   "generations": [],
   "trainingMetrics": [
     {
@@ -1922,7 +1899,7 @@
     "userId": 1,
     "modelId": 8,
     "trainingRunId": 9,
-    "checkpointId": 3,
+    "checkpointId": 4,
     "generationId": 1,
     "metricId": 119
   }
