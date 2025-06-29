@@ -32,11 +32,13 @@ export function Header({ title, subtitle, trainingStatus }: HeaderProps) {
   };
 
   return (
-    <header className="border-b border-border px-6 py-4" style={{backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))'}}>
+    <header className="glass-effect border-b px-8 py-6 animate-fade-in-up">
       <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-xl font-semibold" style={{color: 'hsl(var(--foreground))'}}>{title}</h2>
-          <p className="text-sm" style={{color: 'hsl(var(--muted-foreground))'}}>{subtitle}</p>
+        <div className="space-y-1">
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
+            {title}
+          </h1>
+          <p className="text-muted-foreground font-medium">{subtitle}</p>
         </div>
         
         <div className="flex items-center space-x-4">
