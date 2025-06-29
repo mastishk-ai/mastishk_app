@@ -35,7 +35,10 @@ export function ModelConfigPage({
   const { toast } = useToast();
 
   const handleCreateModel = () => {
+    console.log('🎯 ModelConfigPage handleCreateModel called with name:', modelName);
+    
     if (!modelName.trim()) {
+      console.log('❌ Model name validation failed - empty name');
       toast({
         title: "Validation Error",
         description: "Please enter a model name",
@@ -46,6 +49,7 @@ export function ModelConfigPage({
 
     const errors = validateConfig();
     if (errors.length > 0) {
+      console.log('❌ Config validation failed:', errors);
       toast({
         title: "Configuration Error",
         description: errors[0],
@@ -54,9 +58,11 @@ export function ModelConfigPage({
       return;
     }
 
+    console.log('✅ Validation passed, calling onCreateModel with:', { name: modelName });
     onCreateModel({ name: modelName });
     setShowCreateDialog(false);
     setModelName("");
+    console.log('🎯 ModelConfigPage handleCreateModel completed');
   };
 
   const handleExportConfig = () => {

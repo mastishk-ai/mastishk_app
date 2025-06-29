@@ -97,6 +97,11 @@ Mastishk Transformer Studio is an advanced transformer experimentation platform 
 
 ## Changelog
 
+- June 29, 2025: Implemented file-based persistent storage system to fix data loss issues
+  - Replaced volatile in-memory storage with JSON file-based storage in 'data' folder
+  - Models now persist across server restarts and are saved to storage.json
+  - Enhanced cache invalidation with detailed logging for debugging dropdown issues
+  - Added comprehensive mutation debugging to track model creation and cache updates
 - June 29, 2025: Added comprehensive documentation system
   - Created complete Documentation page with all app features and usage guides
   - Added API reference, troubleshooting guide, and system architecture details
