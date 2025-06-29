@@ -92,7 +92,7 @@ export function ThreeDVisualizer() {
   };
 
   const createModelArchitecture3D = () => {
-    const colors = colorSchemes[currentColorScheme as keyof typeof colorSchemes];
+    const colors = colorSchemes[colorScheme as keyof typeof colorSchemes];
     const { num_hidden_layers, hidden_size, num_attention_heads, vocab_size } = mockConfig;
     
     const data = [];
@@ -214,7 +214,7 @@ export function ThreeDVisualizer() {
   };
 
   const createTrainingLandscape3D = () => {
-    const colors = colorSchemes[currentColorScheme as keyof typeof colorSchemes];
+    const colors = colorSchemes[colorScheme as keyof typeof colorSchemes];
     const steps = Array.from({length: 20}, (_, i) => i * 50);
     const learningRates = Array.from({length: 20}, (_, i) => 0.0001 * Math.exp(i * 0.1));
     
@@ -302,7 +302,7 @@ export function ThreeDVisualizer() {
   };
 
   const createCheckpointEvolution3D = () => {
-    const colors = colorSchemes[colorScheme];
+    const colors = colorSchemes[colorScheme as keyof typeof colorSchemes];
     
     return {
       data: [{
@@ -333,7 +333,7 @@ export function ThreeDVisualizer() {
   };
 
   const createAttentionPatterns3D = () => {
-    const colors = colorSchemes[colorScheme];
+    const colors = colorSchemes[colorScheme as keyof typeof colorSchemes];
     const seqLen = 16;
     const numHeads = 4;
     

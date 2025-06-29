@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Sidebar } from '../components/layout/sidebar';
 import { Header } from '../components/layout/header';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
-import { ThreeDVisualizer } from '../components/3d-visualizer';
+import { ThreeDVisualizer } from '../components/3d-visualizer-simple';
 import { TrainingMonitor } from '../components/training/training-monitor';
 import { GenerativeArchitecture3D } from '../components/enhanced-generative-3d';
 

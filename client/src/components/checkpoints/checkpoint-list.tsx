@@ -28,7 +28,6 @@ export function CheckpointList() {
 
   // Get checkpoints
   const { data: checkpoints = [], isLoading } = useQuery({
-    queryKey: ['/api/checkpoints', selectedModelId],
     queryKey: selectedModelId 
       ? ['/api/checkpoints', { modelId: selectedModelId }]
       : ['/api/checkpoints'],
