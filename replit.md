@@ -97,6 +97,12 @@ Mastishk Transformer Studio is an advanced transformer experimentation platform 
 
 ## Changelog
 
+- June 29, 2025: Implemented app-wide theme switching system
+  - Added dark/light mode theme toggle to all pages (Dashboard, Visualization)
+  - Enhanced 3D visualizations with theme-adaptive colors for better visibility
+  - Fixed Plotly chart background, axis, and text colors to respond to theme changes
+  - Implemented proper theme initialization and system preference detection
+  - Resolved blank generative transformer architecture visualization display
 - June 29, 2025: Enhanced 3D generative transformer architecture visualization
   - Created specialized GenerativeArchitecture3D component for transformer visualization
   - Added three interactive view modes: Overview, Layer-by-layer, and Token Flow

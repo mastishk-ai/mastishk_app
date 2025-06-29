@@ -356,14 +356,33 @@ export function ThreeDVisualizer() {
     return {
       data,
       layout: {
-        title: 'Attention Patterns 3D',
-        scene: {
-          xaxis: { title: 'Query Position' },
-          yaxis: { title: 'Key Position' },
-          zaxis: { title: 'Attention Weight' },
-          camera: { eye: { x: 1.5, y: 1.5, z: 1.5 } }
+        title: {
+          text: 'Attention Patterns 3D',
+          font: { color: isDark ? '#ffffff' : '#000000' }
         },
-        height: 600
+        scene: {
+          xaxis: { 
+            title: { text: 'Query Position', font: { color: isDark ? '#ffffff' : '#000000' } },
+            color: isDark ? '#ffffff' : '#000000',
+            gridcolor: isDark ? '#444444' : '#cccccc'
+          },
+          yaxis: { 
+            title: { text: 'Key Position', font: { color: isDark ? '#ffffff' : '#000000' } },
+            color: isDark ? '#ffffff' : '#000000',
+            gridcolor: isDark ? '#444444' : '#cccccc'
+          },
+          zaxis: { 
+            title: { text: 'Attention Weight', font: { color: isDark ? '#ffffff' : '#000000' } },
+            color: isDark ? '#ffffff' : '#000000',
+            gridcolor: isDark ? '#444444' : '#cccccc'
+          },
+          camera: { eye: { x: 1.5, y: 1.5, z: 1.5 } },
+          bgcolor: isDark ? '#1a1a1a' : '#ffffff'
+        },
+        height: 600,
+        paper_bgcolor: isDark ? '#1a1a1a' : '#ffffff',
+        plot_bgcolor: isDark ? '#1a1a1a' : '#ffffff',
+        font: { color: isDark ? '#ffffff' : '#000000' }
       }
     };
   };
@@ -615,8 +634,8 @@ export function ThreeDVisualizer() {
 
               <div className="bg-card rounded-lg p-4">
                 <Plot
-                  data={vizData.data}
-                  layout={vizData.layout}
+                  data={vizData.data as any}
+                  layout={vizData.layout as any}
                   config={{
                     responsive: true,
                     displayModeBar: interactiveMode,
