@@ -21,11 +21,80 @@ try:
 except ImportError:
     TORCH_AVAILABLE = False
 
+class WeightVerifier:
+    """Weight verification system for tracking training progress"""
+    
+    def __init__(self):
+        self.snapshots = {}
+        self.verification_history = []
+    
+    def create_weight_snapshot(self, model, step, snapshot_type, description=""):
+        """Create a snapshot of model weights"""
+        snapshot = {
+            'step': step,
+            'type': snapshot_type,
+            'description': description,
+            'timestamp': time.time(),
+            'weights': {}
+        }
+        
+        for name, param in model.named_parameters():
+            if param.requires_grad:
+                snapshot['weights'][name] = {
+                    'mean': float(param.data.mean().item()),
+                    'std': float(param.data.std().item()),
+                    'norm': float(param.data.norm().item()),
+                    'shape': list(param.data.shape)
+                }
+        
+        snapshot_id = f"{step}_{snapshot_type}"
+        self.snapshots[snapshot_id] = snapshot
+        return snapshot
+    
+    def verify_weight_updates(self, pre_snapshot, post_snapshot, expected_update=True):
+        """Verify that weights actually changed between snapshots"""
+        results = {
+            'weights_changed': False,
+            'layers_changed': [],
+            'verification_status': 'No changes detected',
+            'change_statistics': {}
+        }
+        
+        pre_weights = pre_snapshot['weights']
+        post_weights = post_snapshot['weights']
+        
+        for layer_name in pre_weights:
+            if layer_name in post_weights:
+                pre_norm = pre_weights[layer_name]['norm']
+                post_norm = post_weights[layer_name]['norm']
+                
+                # Check for meaningful change (more than numerical precision)
+                relative_change = abs(post_norm - pre_norm) / max(pre_norm, 1e-8)
+                
+                if relative_change > 1e-6:  # Threshold for detecting real changes
+                    results['weights_changed'] = True
+                    results['layers_changed'].append(layer_name)
+                    results['change_statistics'][layer_name] = {
+                        'relative_change': relative_change,
+                        'pre_norm': pre_norm,
+                        'post_norm': post_norm
+                    }
+        
+        if results['weights_changed']:
+            results['verification_status'] = f"✅ Weight updates verified in {len(results['layers_changed'])} layers"
+        else:
+            results['verification_status'] = "❌ No weight updates detected - check learning rate or gradients"
+        
+        self.verification_history.append(results)
+        return results
+
 class MastishkBridge:
     def __init__(self):
         self.models = {}
         self.trainers = {}
         self.training_active = False
+        self.weight_verifier = WeightVerifier()
+        self.weight_logging_enabled = False
         
     def send_message(self, msg_type, data=None, error=None):
         """Send JSON message to Node.js"""
@@ -64,21 +133,24 @@ class MastishkBridge:
     def handle_start_training(self, data):
         """Start training a model"""
         try:
+            model_id = data.get('modelId')
+            config = data.get('config', {})
+            
+            # Enable weight logging if configured
+            self.weight_logging_enabled = config.get('enable_weight_logging', False)
+            
             if not TORCH_AVAILABLE:
                 # Simulate training for demo purposes
                 self.simulate_training(data)
                 return
                 
-            model_id = data.get('modelId')
-            config = data.get('config', {})
-            
             if model_id not in self.trainers:
                 raise Exception(f"Model {model_id} not found")
             
             trainer = self.trainers[model_id]
             self.training_active = True
             
-            # Simulate training progress
+            # Simulate training progress with weight verification
             self.simulate_training_with_progress(trainer, config)
             
         except Exception as e:
@@ -115,18 +187,65 @@ class MastishkBridge:
         })
     
     def simulate_training_with_progress(self, trainer, config):
-        """Simulate training with realistic progress"""
+        """Simulate training with realistic progress and weight verification"""
         self.send_message("training_started", {"status": "started"})
         
         # Create dummy optimizer
         dummy_optimizer = optim.AdamW(trainer.model.parameters(), lr=config.get('learning_rate', 0.001))
         
         total_steps = 50
+        gradient_accumulation_steps = config.get('gradient_accumulation_steps', 2)
+        accumulated_steps = 0
+        
         for step in range(total_steps):
             time.sleep(0.05)  # Simulate work
             
+            # Weight verification for optimizer steps when enabled
+            pre_optimizer_snapshot = None
+            weights_updated = False
+            layers_changed = 0
+            verification_status = ""
+            
             # Simulate training step
             loss = self.simulate_training_step(trainer, dummy_optimizer, step)
+            accumulated_steps += 1
+            
+            # Check if we should step optimizer (gradient accumulation complete)
+            should_step = (accumulated_steps % gradient_accumulation_steps == 0)
+            
+            if should_step and self.weight_logging_enabled and TORCH_AVAILABLE:
+                # Create pre-optimizer snapshot
+                pre_optimizer_snapshot = self.weight_verifier.create_weight_snapshot(
+                    trainer.model, step, "pre_optimizer_step", f"Before optimizer step {step}"
+                )
+                
+                # Simulate optimizer step (actually step for weight verification)
+                dummy_optimizer.step()
+                dummy_optimizer.zero_grad()
+                
+                # Create post-optimizer snapshot and verify
+                post_snapshot = self.weight_verifier.create_weight_snapshot(
+                    trainer.model, step, "post_optimizer_step", f"After optimizer step {step}"
+                )
+                
+                verification_results = self.weight_verifier.verify_weight_updates(
+                    pre_optimizer_snapshot, post_snapshot, expected_update=True
+                )
+                
+                weights_updated = verification_results.get('weights_changed', False)
+                layers_changed = len(verification_results.get('layers_changed', []))
+                verification_status = verification_results.get('verification_status', 'Unknown')
+                
+                # Send weight snapshot update
+                self.send_message("weight_snapshot", {
+                    "step": step + 1,
+                    "weights_updated": weights_updated,
+                    "layers_changed": layers_changed,
+                    "verification_status": verification_status,
+                    "snapshot_id": f"{step}_post_optimizer_step"
+                })
+                
+                accumulated_steps = 0
             
             progress = {
                 "step": step + 1,
@@ -134,7 +253,11 @@ class MastishkBridge:
                 "loss": loss,
                 "learningRate": dummy_optimizer.param_groups[0]['lr'],
                 "gpuUtilization": min(80 + (step % 15), 95),
-                "memoryUsage": min(55 + (step % 20), 75)
+                "memoryUsage": min(55 + (step % 20), 75),
+                "weights_updated": weights_updated,
+                "layers_changed": layers_changed,
+                "verification_status": verification_status if self.weight_logging_enabled else "Weight logging disabled",
+                "optimizer_stepped": should_step
             }
             
             self.send_message("training_progress", progress)
@@ -147,7 +270,9 @@ class MastishkBridge:
         self.send_message("training_completed", {
             "status": "completed",
             "finalLoss": loss,
-            "totalSteps": total_steps
+            "totalSteps": total_steps,
+            "weight_logging_enabled": self.weight_logging_enabled,
+            "verification_snapshots": len(self.weight_verifier.snapshots) if self.weight_logging_enabled else 0
         })
     
     def simulate_training_step(self, trainer, optimizer, step):

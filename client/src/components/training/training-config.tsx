@@ -2,7 +2,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ParameterControl } from "@/components/ui/parameter-control";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { Settings } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Settings, Eye, Activity } from "lucide-react";
 import { useTraining } from "@/hooks/use-training";
 
 export function TrainingConfig() {
@@ -107,7 +108,9 @@ export function TrainingConfig() {
     { key: 'early_stopping', label: 'Early Stopping', description: 'Stop when loss plateaus' },
     { key: 'save_optimizer_state', label: 'Save Optimizer State', description: 'Include optimizer in checkpoints' },
     { key: 'save_scheduler_state', label: 'Save Scheduler State', description: 'Include scheduler in checkpoints' },
-    { key: 'verify_integrity', label: 'Verify Integrity', description: 'Verify checkpoint integrity' }
+    { key: 'verify_integrity', label: 'Verify Integrity', description: 'Verify checkpoint integrity' },
+    { key: 'enable_weight_logging', label: 'Weight Logging', description: 'Log weight snapshots during training' },
+    { key: 'weight_verification', label: 'Weight Verification', description: 'Verify weight updates after optimizer steps' }
   ];
 
   return (
@@ -220,6 +223,52 @@ export function TrainingConfig() {
               value={config.seed}
               onChange={(value) => updateConfig({ seed: value })}
             />
+
+            {/* Weight Logging Section */}
+            <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 rounded-lg border border-blue-200 dark:border-blue-800">
+              <div className="flex items-center space-x-3 mb-3">
+                <Eye className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                <h5 className="text-sm font-semibold text-blue-900 dark:text-blue-100 uppercase tracking-wide">Weight Monitoring</h5>
+              </div>
+              
+              <div className="space-y-3">
+                <div className="flex items-center space-x-3">
+                  <Checkbox
+                    id="enable-weight-logging"
+                    checked={(config as any).enable_weight_logging || false}
+                    onCheckedChange={(checked) => updateConfig({ enable_weight_logging: checked } as any)}
+                    className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
+                  />
+                  <div className="flex-1">
+                    <Label htmlFor="enable-weight-logging" className="text-sm font-medium text-blue-900 dark:text-blue-100 cursor-pointer">
+                      Enable Weight Snapshots
+                    </Label>
+                    <p className="text-xs text-blue-700 dark:text-blue-300">
+                      {(config as any).enable_weight_logging 
+                        ? "Weight snapshots will be logged every optimizer step" 
+                        : "Click to enable detailed weight change tracking"}
+                    </p>
+                  </div>
+                  <Activity className={`w-4 h-4 ${(config as any).enable_weight_logging ? 'text-green-500' : 'text-gray-400'}`} />
+                </div>
+
+                {(config as any).enable_weight_logging && (
+                  <div className="ml-6 pl-3 border-l-2 border-blue-200 dark:border-blue-700 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-medium text-blue-800 dark:text-blue-200">Snapshot Frequency</span>
+                      <span className="text-xs text-blue-600 dark:text-blue-400">Every optimizer step</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-medium text-blue-800 dark:text-blue-200">Verification</span>
+                      <span className="text-xs text-blue-600 dark:text-blue-400">Pre & post optimizer updates</span>
+                    </div>
+                    <p className="text-xs text-blue-600 dark:text-blue-400 italic">
+                      This will track weight changes to verify training progress and detect optimization issues.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </CardContent>

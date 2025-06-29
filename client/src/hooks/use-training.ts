@@ -28,6 +28,8 @@ export function useTraining() {
     save_random_states: true,
     verify_integrity: true,
     max_checkpoints: 10,
+    enable_weight_logging: false,
+    weight_verification: false,
   });
 
   const queryClient = useQueryClient();

@@ -226,6 +226,10 @@ export const TrainingConfigSchema = z.object({
   save_random_states: z.boolean().default(true),
   verify_integrity: z.boolean().default(true),
   max_checkpoints: z.number().default(10),
+  
+  // Weight logging and verification
+  enable_weight_logging: z.boolean().default(false),
+  weight_verification: z.boolean().default(false),
 });
 
 export const GenerationConfigSchema = z.object({
