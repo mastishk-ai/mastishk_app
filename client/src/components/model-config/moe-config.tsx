@@ -12,6 +12,17 @@ interface MoeConfigProps {
 }
 
 export function MoeConfig({ config, onUpdate, onUpdateMoe }: MoeConfigProps) {
+  // Provide default config if undefined
+  const safeConfig = config || {
+    use_moe: false,
+    moe_config: {
+      num_experts: 8,
+      expert_capacity_factor: 1.0,
+      top_k_experts: 2,
+      load_balancing_loss_weight: 0.01,
+      expert_dropout: 0.0
+    }
+  };
   const moeParameters = [
     {
       key: 'num_experts',

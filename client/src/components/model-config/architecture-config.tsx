@@ -11,6 +11,23 @@ interface ArchitectureConfigProps {
 }
 
 export function ArchitectureConfig({ config, onUpdate }: ArchitectureConfigProps) {
+  // Provide default config if undefined
+  const safeConfig = config || {
+    hidden_size: 768,
+    num_hidden_layers: 12,
+    num_attention_heads: 12,
+    intermediate_size: 3072,
+    vocab_size: 50257,
+    max_position_embeddings: 2048,
+    architecture: 'standard',
+    use_flash_attention: false,
+    use_differential_attention: false,
+    use_minimax: false,
+    lolcats_enabled: false,
+    use_multi_token_prediction: false,
+    rms_norm_eps: 1e-5,
+    initializer_range: 0.02
+  };
   const coreParameters = [
     {
       key: 'hidden_size',
@@ -107,10 +124,10 @@ export function ArchitectureConfig({ config, onUpdate }: ArchitectureConfigProps
               {advancedFeatures.map(({ key, label, description }) => (
                 <div key={key} className="flex items-start space-x-3 p-3 rounded-lg border border-border bg-background/50">
                   <Switch
-                    checked={(config as any)[key]}
+                    checked={(safeConfig as any)[key]}
                     onCheckedChange={(checked) => {
                       console.log(`Toggle ${key}: ${checked}`);
-                      onUpdate({ [key]: checked } as any);
+                      onUpdate({ ...safeConfig, [key]: checked } as any);
                     }}
                     className="mt-0.5"
                   />
@@ -122,7 +139,7 @@ export function ArchitectureConfig({ config, onUpdate }: ArchitectureConfigProps
                       {description}
                     </p>
                     <div className="text-xs text-primary mt-1">
-                      Status: {(config as any)[key] ? 'Enabled' : 'Disabled'}
+                      Status: {(safeConfig as any)[key] ? 'Enabled' : 'Disabled'}
                     </div>
                   </div>
                 </div>
@@ -140,8 +157,8 @@ export function ArchitectureConfig({ config, onUpdate }: ArchitectureConfigProps
                 description: 'Normalization epsilon',
                 type: 'number'
               }}
-              value={config.rms_norm_eps}
-              onChange={(value) => onUpdate({ rms_norm_eps: value })}
+              value={safeConfig.rms_norm_eps}
+              onChange={(value) => onUpdate({ ...safeConfig, rms_norm_eps: value })}
             />
             
             <ParameterControl
@@ -150,8 +167,8 @@ export function ArchitectureConfig({ config, onUpdate }: ArchitectureConfigProps
                 description: 'Weight initialization range',
                 type: 'number'
               }}
-              value={config.initializer_range}
-              onChange={(value) => onUpdate({ initializer_range: value })}
+              value={safeConfig.initializer_range}
+              onChange={(value) => onUpdate({ ...safeConfig, initializer_range: value })}
             />
             
             <ParameterControl

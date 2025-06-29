@@ -72,21 +72,46 @@ export default function Dashboard() {
   const renderPage = () => {
     switch (location) {
       case "/training":
-        return <TrainingPipelinePage />;
+        return <TrainingPage />;
       case "/generation":
-        return <TextGenerationPage />;
+        return <GenerationPage />;
       case "/monitoring":
-        return <TrainingMonitorPage />;
+        return <MonitoringPage />;
       case "/checkpoints":
-        return <CheckpointManagerPage />;
+        return <CheckpointsPage />;
       case "/analytics":
-        return <AnalyticsPage />;
+        return <AnalyticsPageContent />;
       case "/testing":
         return <TestingPage />;
       case "/docs":
         return <DocumentationPage />;
       default:
-        return <ModelConfigurationPage />;
+        return <ModelConfigPage 
+          config={{
+            hidden_size: 768,
+            num_hidden_layers: 12,
+            num_attention_heads: 12,
+            intermediate_size: 3072,
+            vocab_size: 50257,
+            max_position_embeddings: 2048,
+            architecture: 'standard',
+            use_flash_attention: false,
+            use_differential_attention: false,
+            use_minimax: false,
+            lolcats_enabled: false,
+            use_multi_token_prediction: false,
+            rms_norm_eps: 1e-5,
+            initializer_range: 0.02,
+            use_moe: false,
+            use_mod: false
+          }}
+          onUpdate={() => {}}
+          onUpdateMoe={() => {}}
+          onUpdateMod={() => {}}
+          onCreateModel={() => {}}
+          isCreating={false}
+          validateConfig={() => []}
+        />;
     }
   };
 

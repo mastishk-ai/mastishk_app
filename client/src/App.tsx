@@ -17,6 +17,8 @@ function Router() {
       <Route path="/monitoring" component={Dashboard} />
       <Route path="/checkpoints" component={Dashboard} />
       <Route path="/analytics" component={Dashboard} />
+      <Route path="/testing" component={Dashboard} />
+      <Route path="/docs" component={Dashboard} />
       <Route path="/visualization" component={VisualizationPage} />
       <Route component={NotFound} />
     </Switch>

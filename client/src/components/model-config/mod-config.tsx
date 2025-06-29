@@ -12,6 +12,16 @@ interface ModConfigProps {
 }
 
 export function ModConfig({ config, onUpdate, onUpdateMod }: ModConfigProps) {
+  // Provide default config if undefined
+  const safeConfig = config || {
+    use_mod: false,
+    mod_config: {
+      skip_probability: 0.2,
+      min_layers_per_token: 8,
+      max_layers_per_token: 32,
+      routing_strategy: 'learned'
+    }
+  };
   const modParameters = [
     {
       key: 'skip_probability',
