@@ -145,6 +145,96 @@ export class TrainingManager extends EventEmitter {
     }, 2000); // Update every 2 seconds
   }
 
+  async resumeFromCheckpoint(
+    checkpoint: any,
+    config: TrainingConfig
+  ): Promise<TrainingRun> {
+    // Check if training is already running
+    if (this.activeTrainingRun) {
+      throw new Error('Training is already in progress');
+    }
+
+    // Create new training run that continues from checkpoint
+    const insertTrainingRun: InsertTrainingRun = {
+      modelId: checkpoint.modelId,
+      name: `Resume from ${checkpoint.name}`,
+      config: config as any,
+      totalSteps: config.max_steps,
+    };
+
+    const trainingRun = await storage.createTrainingRun(insertTrainingRun);
+    this.activeTrainingRun = trainingRun;
+
+    // Update model status
+    await storage.updateModel(checkpoint.modelId, { status: 'training' });
+
+    try {
+      console.log(`Resuming training from checkpoint ${checkpoint.name} at step ${checkpoint.step}`);
+      
+      // Start training simulation from checkpoint step
+      setTimeout(() => this.simulateResumedTraining(trainingRun, config, checkpoint.step), 100);
+
+      // Update training run status
+      await storage.updateTrainingRun(trainingRun.id, {
+        status: 'running',
+        startedAt: new Date(),
+        currentStep: checkpoint.step,
+        currentLoss: checkpoint.loss,
+      });
+
+      return trainingRun;
+    } catch (error) {
+      // Handle training resume error
+      await storage.updateTrainingRun(trainingRun.id, { status: 'failed' });
+      await storage.updateModel(checkpoint.modelId, { status: 'ready' });
+      this.activeTrainingRun = null;
+      throw error;
+    }
+  }
+
+  private simulateResumedTraining(trainingRun: TrainingRun, config: TrainingConfig, startStep: number): void {
+    console.log(`Starting resumed training simulation from step ${startStep} for run ${trainingRun.id}`);
+    
+    let currentStep = startStep;
+    const maxSteps = config.max_steps || 100;
+    const learningRate = config.learning_rate || 0.0005;
+    
+    this.mockTrainingInterval = setInterval(async () => {
+      if (!this.activeTrainingRun || this.activeTrainingRun.id !== trainingRun.id) {
+        if (this.mockTrainingInterval) {
+          clearInterval(this.mockTrainingInterval);
+          this.mockTrainingInterval = null;
+        }
+        return;
+      }
+      
+      currentStep += 1;
+      const progress = currentStep / maxSteps;
+      
+      // Simulate decreasing loss continuing from checkpoint
+      const loss = 2.5 * Math.exp(-progress * 2) + 0.1 * Math.random();
+      
+      // Simulate training progress
+      const mockProgress: TrainingProgress = {
+        step: currentStep,
+        loss: parseFloat(loss.toFixed(4)),
+        learningRate,
+        gpuUtilization: 85 + Math.random() * 10,
+        memoryUsage: 70 + Math.random() * 15,
+      };
+      
+      await this.handleTrainingProgress(mockProgress);
+      
+      if (currentStep >= maxSteps) {
+        if (this.mockTrainingInterval) {
+          clearInterval(this.mockTrainingInterval);
+          this.mockTrainingInterval = null;
+        }
+        await this.handleTrainingComplete({ success: true });
+      }
+    }, 2000); // Update every 2 seconds
+  }
+
   async startTraining(
     modelId: number,
     name: string,

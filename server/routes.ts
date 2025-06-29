@@ -451,6 +451,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.post('/api/checkpoints/:id/resume-training', async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { config } = req.body;
+      
+      // Load the checkpoint
+      const checkpoint = await checkpointManager.getCheckpoint(id);
+      if (!checkpoint) {
+        return res.status(404).json({ error: 'Checkpoint not found' });
+      }
+
+      // Load checkpoint state
+      await checkpointManager.loadCheckpoint(id);
+      
+      // Create new training run that continues from checkpoint
+      const trainingConfig = TrainingConfigSchema.parse(config);
+      const run = await trainingManager.resumeFromCheckpoint(checkpoint, trainingConfig);
+      
+      res.status(201).json(run);
+    } catch (error) {
+      res.status(400).json({ error: error instanceof Error ? error.message : 'Failed to resume training from checkpoint' });
+    }
+  });
+
   app.delete('/api/checkpoints/:id', async (req, res) => {
     try {
       const id = parseInt(req.params.id);

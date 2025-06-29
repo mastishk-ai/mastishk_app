@@ -4,7 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { Save, Upload, Download, Info, Trash2, Plus } from "lucide-react";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Save, Upload, Download, Info, Trash2, Plus, Play, Settings } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -23,6 +26,14 @@ interface Checkpoint {
 
 export function CheckpointList() {
   const [selectedModelId, setSelectedModelId] = useState<number | null>(null);
+  const [resumeDialogOpen, setResumeDialogOpen] = useState(false);
+  const [selectedCheckpoint, setSelectedCheckpoint] = useState<Checkpoint | null>(null);
+  const [resumeConfig, setResumeConfig] = useState({
+    max_steps: 100,
+    learning_rate: 0.0005,
+    batch_size: 32,
+    optimizer: 'adamw'
+  });
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -75,6 +86,29 @@ export function CheckpointList() {
     onError: (error) => {
       toast({
         title: "Create Failed",
+        description: error.message,
+        variant: "destructive"
+      });
+    }
+  });
+
+  // Resume training mutation
+  const resumeTrainingMutation = useMutation({
+    mutationFn: async ({ checkpointId, config }: { checkpointId: number; config: any }) => {
+      const response = await apiRequest('POST', `/api/checkpoints/${checkpointId}/resume-training`, { config });
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/training-runs'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/training/status'] });
+      toast({
+        title: "Training Resumed",
+        description: "Training has been resumed from checkpoint"
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Resume Failed",
         description: error.message,
         variant: "destructive"
       });
@@ -228,6 +262,18 @@ export function CheckpointList() {
                     <Button
                       variant="ghost"
                       size="sm"
+                      onClick={() => {
+                        setSelectedCheckpoint(checkpoint);
+                        setResumeDialogOpen(true);
+                      }}
+                      disabled={resumeTrainingMutation.isPending}
+                      title="Resume training from checkpoint"
+                    >
+                      <Play className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
                       title="Download"
                     >
                       <Download className="w-4 h-4" />
@@ -309,6 +355,110 @@ export function CheckpointList() {
           </div>
         )}
       </CardContent>
+
+      {/* Resume Training Dialog */}
+      <Dialog open={resumeDialogOpen} onOpenChange={setResumeDialogOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Resume Training</DialogTitle>
+          </DialogHeader>
+          {selectedCheckpoint && (
+            <div className="space-y-4">
+              <div className="bg-muted p-3 rounded">
+                <p className="text-sm font-medium">Resuming from: {selectedCheckpoint.name}</p>
+                <p className="text-xs text-muted-foreground">Step {selectedCheckpoint.step} • Loss {selectedCheckpoint.loss?.toFixed(4)}</p>
+              </div>
+              
+              <div className="grid gap-4">
+                <div>
+                  <Label htmlFor="max_steps">Maximum Steps</Label>
+                  <Input
+                    id="max_steps"
+                    type="number"
+                    value={resumeConfig.max_steps}
+                    onChange={(e) => setResumeConfig(prev => ({
+                      ...prev,
+                      max_steps: parseInt(e.target.value) || 100
+                    }))}
+                    min="1"
+                    max="10000"
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="learning_rate">Learning Rate</Label>
+                  <Input
+                    id="learning_rate"
+                    type="number"
+                    step="0.00001"
+                    value={resumeConfig.learning_rate}
+                    onChange={(e) => setResumeConfig(prev => ({
+                      ...prev,
+                      learning_rate: parseFloat(e.target.value) || 0.0005
+                    }))}
+                    min="0.000001"
+                    max="0.1"
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="batch_size">Batch Size</Label>
+                  <Input
+                    id="batch_size"
+                    type="number"
+                    value={resumeConfig.batch_size}
+                    onChange={(e) => setResumeConfig(prev => ({
+                      ...prev,
+                      batch_size: parseInt(e.target.value) || 32
+                    }))}
+                    min="1"
+                    max="512"
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="optimizer">Optimizer</Label>
+                  <Select value={resumeConfig.optimizer} onValueChange={(value) => setResumeConfig(prev => ({
+                    ...prev,
+                    optimizer: value
+                  }))}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="adamw">AdamW</SelectItem>
+                      <SelectItem value="adam">Adam</SelectItem>
+                      <SelectItem value="sgd">SGD</SelectItem>
+                      <SelectItem value="rmsprop">RMSprop</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              
+              <div className="flex justify-end space-x-2 pt-4">
+                <Button variant="outline" onClick={() => setResumeDialogOpen(false)}>
+                  Cancel
+                </Button>
+                <Button 
+                  onClick={() => {
+                    if (selectedCheckpoint) {
+                      resumeTrainingMutation.mutate({
+                        checkpointId: selectedCheckpoint.id,
+                        config: resumeConfig
+                      });
+                      setResumeDialogOpen(false);
+                    }
+                  }}
+                  disabled={resumeTrainingMutation.isPending}
+                >
+                  <Play className="w-4 h-4 mr-2" />
+                  {resumeTrainingMutation.isPending ? 'Starting...' : 'Resume Training'}
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 }
