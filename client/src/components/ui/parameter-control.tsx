@@ -22,7 +22,10 @@ export function ParameterControl({ config, value, onChange, className }: Paramet
           <div className="flex items-center space-x-2">
             <Switch
               checked={value}
-              onCheckedChange={onChange}
+              onCheckedChange={(checked) => {
+                console.log(`Switch ${label} toggled to:`, checked);
+                onChange(checked);
+              }}
             />
             <Label className="text-sm">{label}</Label>
           </div>
@@ -56,7 +59,10 @@ export function ParameterControl({ config, value, onChange, className }: Paramet
             <div className="flex items-center space-x-3">
               <Slider
                 value={[value]}
-                onValueChange={(values) => onChange(values[0])}
+                onValueChange={(values) => {
+                  console.log(`Slider ${label} changed to:`, values[0]);
+                  onChange(values[0]);
+                }}
                 min={range.min}
                 max={range.max}
                 step={range.step}
@@ -65,7 +71,10 @@ export function ParameterControl({ config, value, onChange, className }: Paramet
               <Input
                 type="number"
                 value={value}
-                onChange={(e) => onChange(Number(e.target.value))}
+                onChange={(e) => {
+                  console.log(`Input ${label} changed to:`, e.target.value);
+                  onChange(Number(e.target.value));
+                }}
                 min={range.min}
                 max={range.max}
                 step={range.step}

@@ -103,16 +103,27 @@ export function ArchitectureConfig({ config, onUpdate }: ArchitectureConfigProps
           {/* Advanced Features */}
           <div className="space-y-4">
             <h4 className="text-sm font-semibold text-foreground uppercase tracking-wide">Advanced Features</h4>
-            <div className="space-y-3">
+            <div className="space-y-4">
               {advancedFeatures.map(({ key, label, description }) => (
-                <div key={key} className="flex items-center space-x-3">
+                <div key={key} className="flex items-start space-x-3 p-3 rounded-lg border border-border bg-background/50">
                   <Switch
                     checked={(config as any)[key]}
-                    onCheckedChange={(checked) => onUpdate({ [key]: checked } as any)}
+                    onCheckedChange={(checked) => {
+                      console.log(`Toggle ${key}: ${checked}`);
+                      onUpdate({ [key]: checked } as any);
+                    }}
+                    className="mt-0.5"
                   />
-                  <div>
-                    <Label className="text-sm font-medium">{label}</Label>
-                    <p className="text-xs text-muted-foreground">{description}</p>
+                  <div className="flex-1 min-w-0">
+                    <Label className="text-sm font-medium text-foreground cursor-pointer">
+                      {label}
+                    </Label>
+                    <p className="text-xs text-muted-foreground mt-1 break-words">
+                      {description}
+                    </p>
+                    <div className="text-xs text-primary mt-1">
+                      Status: {(config as any)[key] ? 'Enabled' : 'Disabled'}
+                    </div>
                   </div>
                 </div>
               ))}
