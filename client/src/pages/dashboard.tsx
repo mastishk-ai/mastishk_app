@@ -148,7 +148,7 @@ function ModelConfigurationPage() {
   
   return (
     <div className="p-6 space-y-6">
-      <ModelConfigPage 
+      <ModelConfigPage
         config={config}
         onUpdate={updateConfig}
         onUpdateMoe={updateMoeConfig}

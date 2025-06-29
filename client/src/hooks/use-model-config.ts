@@ -68,6 +68,7 @@ export function useModelConfig() {
   const queryClient = useQueryClient();
 
   const updateConfig = useCallback((updates: Partial<ModelConfig>) => {
+    console.log('useModelConfig: Updating config with:', updates);
     setConfig(prev => ({ ...prev, ...updates }));
   }, []);
 

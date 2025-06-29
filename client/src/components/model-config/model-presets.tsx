@@ -175,12 +175,11 @@ export function ModelPresets({ onApplyPreset, currentConfig }: ModelPresetsProps
               key={preset.name}
               variant="outline"
               className="p-4 h-auto text-left overflow-hidden bg-background text-foreground border-border hover:bg-primary/10 active:bg-primary/20 transition-all duration-200 cursor-pointer"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                console.log('Button clicked for preset:', preset.name);
-                console.log('Preset config:', preset.config);
+              onClick={() => {
+                console.log('🚀 Preset button clicked:', preset.name);
+                console.log('📋 Preset configuration:', preset.config);
                 onApplyPreset(preset.config);
+                console.log('✅ Preset applied successfully');
               }}
             >
               <div className="w-full overflow-hidden">
