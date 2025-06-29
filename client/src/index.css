@@ -82,6 +82,30 @@
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
     font-feature-settings: "rlig" 1, "calt" 1;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  /* Force theme colors to apply */
+  html {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+
+  /* Ensure all components inherit theme colors */
+  .bg-background {
+    background-color: hsl(var(--background)) !important;
+  }
+
+  .text-foreground {
+    color: hsl(var(--foreground)) !important;
+  }
+
+  .bg-card {
+    background-color: hsl(var(--card)) !important;
+  }
+
+  .text-card-foreground {
+    color: hsl(var(--card-foreground)) !important;
   }
 }
 

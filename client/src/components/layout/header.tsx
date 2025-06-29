@@ -32,11 +32,11 @@ export function Header({ title, subtitle, trainingStatus }: HeaderProps) {
   };
 
   return (
-    <header className="bg-card border-b border-border px-6 py-4">
+    <header className="border-b border-border px-6 py-4" style={{backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))'}}>
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-semibold text-foreground">{title}</h2>
-          <p className="text-sm text-muted-foreground">{subtitle}</p>
+          <h2 className="text-xl font-semibold" style={{color: 'hsl(var(--foreground))'}}>{title}</h2>
+          <p className="text-sm" style={{color: 'hsl(var(--muted-foreground))'}}>{subtitle}</p>
         </div>
         
         <div className="flex items-center space-x-4">

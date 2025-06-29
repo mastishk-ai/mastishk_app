@@ -75,7 +75,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden bg-background">
+    <div className="flex h-screen overflow-hidden" style={{backgroundColor: 'hsl(var(--background))', color: 'hsl(var(--foreground))'}}>
       <Sidebar 
         modelStatus={{
           status: (trainingStatus as any)?.isTraining ? 'training' : 'ready',

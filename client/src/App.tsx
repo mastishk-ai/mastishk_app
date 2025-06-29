@@ -76,7 +76,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <div className="min-h-screen bg-background text-foreground transition-colors duration-200">
+        <div className="min-h-screen bg-background text-foreground transition-colors duration-200" style={{backgroundColor: 'hsl(var(--background))', color: 'hsl(var(--foreground))'}}>
           <Toaster />
           <Router />
         </div>
