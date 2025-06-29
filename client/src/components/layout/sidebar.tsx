@@ -13,7 +13,11 @@ import {
   Cpu,
   Zap,
   Box,
-  Eye
+  Eye,
+  FileText,
+  Shield,
+  Heart,
+  Mail
 } from "lucide-react";
 import logoImage from "@assets/Copilot_20250629_034156_1751193748480.png";
 
@@ -81,6 +85,33 @@ export function Sidebar({ modelStatus }: SidebarProps) {
       label: "Documentation",
       icon: Box,
       description: "Comprehensive app documentation"
+    }
+  ];
+
+  const legalItems = [
+    {
+      path: "/about",
+      label: "About",
+      icon: Heart,
+      description: "About Mastishk Transformer Studio"
+    },
+    {
+      path: "/terms",
+      label: "Terms of Service",
+      icon: FileText,
+      description: "Terms and conditions"
+    },
+    {
+      path: "/privacy",
+      label: "Privacy Policy", 
+      icon: Shield,
+      description: "Privacy policy and data handling"
+    },
+    {
+      path: "/contact",
+      label: "Contact Us",
+      icon: Mail,
+      description: "Get in touch with our team"
     }
   ];
 
@@ -160,6 +191,31 @@ export function Sidebar({ modelStatus }: SidebarProps) {
               Analysis
             </h3>
             {navigationItems.slice(4).map((item) => {
+              const Icon = item.icon;
+              const isActive = location === item.path;
+              
+              return (
+                <Link key={item.path} href={item.path}>
+                  <a className={cn(
+                    "group flex items-center space-x-4 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300",
+                    isActive 
+                      ? "premium-button text-white shadow-lg" 
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50 premium-card"
+                  )}>
+                    <Icon className="w-5 h-5 transition-transform group-hover:scale-110" />
+                    <span>{item.label}</span>
+                  </a>
+                </Link>
+              );
+            })}
+          </div>
+
+          {/* Legal & Info */}
+          <div className="space-y-3">
+            <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-2">
+              Legal & Info
+            </h3>
+            {legalItems.map((item) => {
               const Icon = item.icon;
               const isActive = location === item.path;
               
