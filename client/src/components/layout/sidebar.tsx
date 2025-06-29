@@ -17,7 +17,9 @@ import {
   FileText,
   Shield,
   Heart,
-  Mail
+  Mail,
+  ChevronUp,
+  ChevronDown
 } from "lucide-react";
 import logoImage from "@assets/Copilot_20250629_034156_1751193748480.png";
 
@@ -30,6 +32,8 @@ interface SidebarProps {
 
 export function Sidebar({ modelStatus }: SidebarProps) {
   const [location] = useLocation();
+  const [isModelStatusCollapsed, setIsModelStatusCollapsed] = useState(false);
+  const [isLegalCollapsed, setIsLegalCollapsed] = useState(true);
 
   const navigationItems = [
     {
@@ -238,51 +242,102 @@ export function Sidebar({ modelStatus }: SidebarProps) {
       </nav>
 
       {/* Model Status */}
-      <div className="p-6 border-t border-border/50">
-        <div className="premium-card rounded-2xl p-5 content-container">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-sm font-bold text-foreground text-truncate">Model Status</span>
-            <div className={cn(
-              "w-3 h-3 rounded-full shadow-lg flex-shrink-0",
-              modelStatus?.status === 'training' ? "bg-emerald-500 shadow-emerald-500/50 animate-pulse" :
-              modelStatus?.status === 'ready' ? "bg-blue-500 shadow-blue-500/50" : "bg-slate-400"
-            )} />
-          </div>
-          <p className="text-xs text-muted-foreground font-medium leading-relaxed break-words">
-            {modelStatus?.status === 'training' ? 'Currently training model...' :
-             modelStatus?.status === 'ready' ? `Ready to use • ${modelStatus?.lastTrained || 'Recently'}` :
-             'No model configured yet'}
-          </p>
+      <div className="border-t border-border/50">
+        <div className="p-4">
+          <button 
+            onClick={() => setIsModelStatusCollapsed(!isModelStatusCollapsed)}
+            className="w-full flex items-center justify-between p-2 hover:bg-muted/50 rounded-lg transition-colors"
+          >
+            <span className="text-sm font-bold text-foreground">Model Status</span>
+            <div className="flex items-center space-x-2">
+              <div className={cn(
+                "w-3 h-3 rounded-full shadow-lg flex-shrink-0",
+                modelStatus?.status === 'training' ? "bg-emerald-500 shadow-emerald-500/50 animate-pulse" :
+                modelStatus?.status === 'ready' ? "bg-blue-500 shadow-blue-500/50" : "bg-slate-400"
+              )} />
+              {isModelStatusCollapsed ? 
+                <ChevronDown className="w-4 h-4 text-muted-foreground" /> : 
+                <ChevronUp className="w-4 h-4 text-muted-foreground" />
+              }
+            </div>
+          </button>
+          
+          {!isModelStatusCollapsed && (
+            <div className="mt-2 p-3 premium-card rounded-xl">
+              <p className="text-xs text-muted-foreground font-medium leading-relaxed break-words">
+                {modelStatus?.status === 'training' ? 'Currently training model...' :
+                 modelStatus?.status === 'ready' ? `Ready to use • ${modelStatus?.lastTrained || 'Recently'}` :
+                 'No model configured yet'}
+              </p>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Footer Links */}
-      <div className="p-4 border-t border-border/50 mt-auto">
-        <div className="grid grid-cols-2 gap-2 mb-4">
-          <Link href="/about">
-            <a className="text-xs text-muted-foreground hover:text-foreground transition-colors">
-              About
-            </a>
-          </Link>
-          <Link href="/contact">
-            <a className="text-xs text-muted-foreground hover:text-foreground transition-colors">
-              Contact Us
-            </a>
-          </Link>
-          <Link href="/privacy">
-            <a className="text-xs text-muted-foreground hover:text-foreground transition-colors">
-              Privacy Policy
-            </a>
-          </Link>
-          <Link href="/terms">
-            <a className="text-xs text-muted-foreground hover:text-foreground transition-colors">
-              Terms of Service
-            </a>
-          </Link>
+      {/* Legal & Info */}
+      <div className="border-t border-border/50 mt-auto">
+        <div className="p-4">
+          <button 
+            onClick={() => setIsLegalCollapsed(!isLegalCollapsed)}
+            className="w-full flex items-center justify-between p-2 hover:bg-muted/50 rounded-lg transition-colors"
+          >
+            <div className="flex items-center space-x-2">
+              <Shield className="w-4 h-4 text-muted-foreground" />
+              <span className="text-sm font-bold text-foreground">Legal & Info</span>
+            </div>
+            {isLegalCollapsed ? 
+              <ChevronDown className="w-4 h-4 text-muted-foreground" /> : 
+              <ChevronUp className="w-4 h-4 text-muted-foreground" />
+            }
+          </button>
+          
+          {!isLegalCollapsed && (
+            <div className="mt-2 space-y-2">
+              <Link href="/about" className={cn(
+                "flex items-center space-x-3 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-300 hover:scale-[1.02] group",
+                location === "/about" 
+                  ? "bg-gradient-to-r from-primary/20 to-primary/10 text-primary shadow-lg shadow-primary/20 border border-primary/30" 
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
+              )}>
+                <Heart className="w-4 h-4 flex-shrink-0" />
+                <span className="truncate">About</span>
+              </Link>
+              
+              <Link href="/terms" className={cn(
+                "flex items-center space-x-3 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-300 hover:scale-[1.02] group",
+                location === "/terms" 
+                  ? "bg-gradient-to-r from-primary/20 to-primary/10 text-primary shadow-lg shadow-primary/20 border border-primary/30" 
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
+              )}>
+                <FileText className="w-4 h-4 flex-shrink-0" />
+                <span className="truncate">Terms of Service</span>
+              </Link>
+              
+              <Link href="/privacy" className={cn(
+                "flex items-center space-x-3 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-300 hover:scale-[1.02] group",
+                location === "/privacy" 
+                  ? "bg-gradient-to-r from-primary/20 to-primary/10 text-primary shadow-lg shadow-primary/20 border border-primary/30" 
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
+              )}>
+                <Shield className="w-4 h-4 flex-shrink-0" />
+                <span className="truncate">Privacy Policy</span>
+              </Link>
+              
+              <Link href="/contact" className={cn(
+                "flex items-center space-x-3 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-300 hover:scale-[1.02] group",
+                location === "/contact" 
+                  ? "bg-gradient-to-r from-primary/20 to-primary/10 text-primary shadow-lg shadow-primary/20 border border-primary/30" 
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
+              )}>
+                <Mail className="w-4 h-4 flex-shrink-0" />
+                <span className="truncate">Contact Us</span>
+              </Link>
+            </div>
+          )}
         </div>
         
         {/* Copyright */}
-        <div className="text-center">
+        <div className="text-center p-4 border-t border-border/50">
           <p className="text-xs text-muted-foreground">
             © 2025 <span className="font-semibold">Aman Sharma</span>
           </p>
