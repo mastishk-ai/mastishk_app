@@ -36,6 +36,85 @@ try:
 except ImportError:
     TORCH_AVAILABLE = False
     print("PyTorch not available - running in compatibility mode")
+    # Create mock torch and nn for compatibility
+    class MockTorch:
+        def __init__(self):
+            self.cuda = MockCuda()
+            self.version = MockVersion()
+            
+        def device(self, device_str):
+            return device_str
+            
+        def tensor(self, data):
+            return data
+            
+        def save(self, obj, path):
+            pass
+            
+        def load(self, path, map_location=None):
+            return {}
+            
+        def get_rng_state(self):
+            return []
+            
+        def set_rng_state(self, state):
+            pass
+    
+    class MockCuda:
+        def is_available(self):
+            return False
+            
+        def memory_allocated(self):
+            return 0
+            
+        def empty_cache(self):
+            pass
+            
+        def get_rng_state_all(self):
+            return []
+            
+        def set_rng_state_all(self, state):
+            pass
+    
+    class MockVersion:
+        def __init__(self):
+            self.cuda = None
+    
+    class MockNN:
+        class Module:
+            def __init__(self):
+                pass
+                
+            def parameters(self):
+                return []
+                
+            def state_dict(self):
+                return {}
+                
+            def load_state_dict(self, state):
+                pass
+                
+            def to(self, device):
+                return self
+                
+            def train(self):
+                pass
+                
+            def eval(self):
+                pass
+        
+        class Linear:
+            def __init__(self, *args, **kwargs):
+                pass
+                
+        class Embedding:
+            def __init__(self, *args, **kwargs):
+                pass
+    
+    if not TORCH_AVAILABLE:
+        torch = MockTorch()
+        nn = MockNN()
+        np = None
 
 # Vision imports (optional)
 try:

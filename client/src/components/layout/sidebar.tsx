@@ -12,7 +12,8 @@ import {
   BarChart2, 
   Cpu,
   Zap,
-  Box
+  Box,
+  Eye
 } from "lucide-react";
 import logoImage from "@assets/Copilot_20250629_034156_1751193748480.png";
 
@@ -74,6 +75,12 @@ export function Sidebar({ modelStatus }: SidebarProps) {
       label: "Documentation",
       icon: Box,
       description: "Comprehensive app documentation"
+    },
+    {
+      path: "/visualization",
+      label: "3D Visualization",
+      icon: Eye,
+      description: "Interactive 3D model architecture"
     }
   ];
 
