@@ -5,13 +5,14 @@ import { ModelConfig } from "@shared/schema";
 
 interface ModelPresetsProps {
   onApplyPreset: (preset: Partial<ModelConfig>) => void;
+  currentConfig?: any;
 }
 
 export function ModelPresets({ onApplyPreset, currentConfig }: ModelPresetsProps) {
   
   const handlePresetApply = (preset: any) => {
-    console.log('Applying preset:', preset.name, preset);
-    onApplyPreset(preset);
+    console.log('Applying preset:', preset.name, preset.config);
+    onApplyPreset(preset.config);
   };
   const presets = [
     {

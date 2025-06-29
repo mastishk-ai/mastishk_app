@@ -142,7 +142,12 @@ export function ModelConfigPage({
       {/* Model Presets and Actions */}
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Quick Presets */}
-        <ModelPresets onApplyPreset={onUpdate} />
+        <ModelPresets 
+          onApplyPreset={(preset) => {
+            console.log('ModelConfigPage applying preset:', preset);
+            onUpdate(preset);
+          }} 
+        />
         
         {/* Configuration Actions */}
         <div className="flex-1 premium-card rounded-xl p-6 content-container">
