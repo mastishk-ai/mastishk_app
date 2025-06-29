@@ -13,6 +13,7 @@ import { GenerationPage } from "@/components/generation/generation-page";
 import { MonitoringPage } from "@/components/monitoring/monitoring-page";
 import { CheckpointsPage } from "@/components/checkpoints/checkpoints-page";
 import { AnalyticsPageContent } from "@/components/analytics/analytics-page";
+import { TestingPage } from "@/components/testing/testing-page";
 
 export default function Dashboard() {
   const [location] = useLocation();
