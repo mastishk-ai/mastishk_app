@@ -36,7 +36,9 @@ export function Header({ title, subtitle, trainingStatus }: HeaderProps) {
       <div className="flex items-center justify-between">
         <div className="space-y-1">
           <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
-            {title}
+            <span className="font-extrabold">{title.includes('Mastishk') ? 'Mastishk' : title}</span>
+            {title.includes('Mastishk') && <span className="font-normal ml-2">{title.replace('Mastishk ', '')}</span>}
+            {!title.includes('Mastishk') && title}
           </h1>
           <p className="text-muted-foreground font-medium">{subtitle}</p>
         </div>
@@ -56,8 +58,13 @@ export function Header({ title, subtitle, trainingStatus }: HeaderProps) {
             </div>
           </div>
           
-          {/* Global Actions */}
+          {/* Copyright and Global Actions */}
           <div className="flex items-center space-x-3">
+            <div className="text-right hidden lg:block">
+              <p className="text-xs text-muted-foreground">
+                © 2025 <span className="font-semibold">Aman Sharma</span>
+              </p>
+            </div>
             <Button variant="ghost" size="sm" className="premium-button bg-transparent hover:bg-primary/10 rounded-xl">
               <Download className="w-5 h-5" />
             </Button>
