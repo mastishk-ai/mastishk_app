@@ -1,0 +1,283 @@
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { useToast } from "@/hooks/use-toast";
+import { ArchitectureConfig } from "./architecture-config";
+import { MoeConfig } from "./moe-config";
+import { ModConfig } from "./mod-config";
+import { ModelPresets } from "./model-presets";
+import { ModelList } from "./model-list";
+import { ModelConfig } from "@shared/schema";
+
+interface ModelConfigPageProps {
+  config: ModelConfig;
+  onUpdate: (updates: Partial<ModelConfig>) => void;
+  onUpdateMoe: (updates: Partial<NonNullable<ModelConfig['moe_config']>>) => void;
+  onUpdateMod: (updates: Partial<NonNullable<ModelConfig['mod_config']>>) => void;
+  onCreateModel: (data: { name: string }) => void;
+  isCreating: boolean;
+  validateConfig: () => string[];
+}
+
+export function ModelConfigPage({
+  config,
+  onUpdate,
+  onUpdateMoe,
+  onUpdateMod,
+  onCreateModel,
+  isCreating,
+  validateConfig
+}: ModelConfigPageProps) {
+  console.log('🎯 ModelConfigPage rendered with config:', config);
+  const [modelName, setModelName] = useState("");
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const { toast } = useToast();
+
+  const handleCreateModel = () => {
+    console.log('🎯 ModelConfigPage handleCreateModel called with name:', modelName);
+    
+    if (!modelName.trim()) {
+      console.log('❌ Model name validation failed - empty name');
+      toast({
+        title: "Validation Error",
+        description: "Please enter a model name",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const errors = validateConfig();
+    if (errors.length > 0) {
+      console.log('❌ Config validation failed:', errors);
+      toast({
+        title: "Configuration Error",
+        description: errors[0],
+        variant: "destructive"
+      });
+      return;
+    }
+
+    console.log('✅ Validation passed, calling onCreateModel with:', { name: modelName });
+    onCreateModel({ name: modelName });
+    setShowCreateDialog(false);
+    setModelName("");
+    console.log('🎯 ModelConfigPage handleCreateModel completed');
+  };
+
+  const handleExportConfig = () => {
+    const configBlob = new Blob([JSON.stringify(config, null, 2)], {
+      type: 'application/json'
+    });
+    const url = URL.createObjectURL(configBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `mastishk_config_${Date.now()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    toast({
+      title: "Config Exported",
+      description: "Configuration saved to file"
+    });
+  };
+
+  const handleImportConfig = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const importedConfig = JSON.parse(e.target?.result as string);
+        onUpdate(importedConfig);
+        toast({
+          title: "Config Imported",
+          description: "Configuration loaded successfully"
+        });
+      } catch (error) {
+        toast({
+          title: "Import Error",
+          description: "Invalid configuration file",
+          variant: "destructive"
+        });
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  const handleResetConfig = () => {
+    onUpdate({
+      vocab_size: 32000,
+      hidden_size: 4096,
+      intermediate_size: 11008,
+      num_hidden_layers: 32,
+      num_attention_heads: 32,
+      num_key_value_heads: 8,
+      hidden_act: "silu",
+      max_position_embeddings: 4096,
+      initializer_range: 0.02,
+      rms_norm_eps: 1e-5,
+      use_flash_attention: true,
+      use_differential_attention: false,
+      use_minimax: false,
+      lolcats_enabled: false,
+      use_multi_token_prediction: false,
+      use_moe: false,
+      use_mod: false,
+    });
+
+    toast({
+      title: "Config Reset",
+      description: "Configuration reset to defaults"
+    });
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Architecture Configuration */}
+      <ArchitectureConfig 
+        config={config} 
+        onUpdate={(updates) => {
+          console.log('📐 ArchitectureConfig onUpdate called with:', updates);
+          onUpdate(updates);
+        }} 
+      />
+
+      {/* MoE Configuration */}
+      <MoeConfig 
+        config={config} 
+        onUpdate={(updates) => {
+          console.log('🔀 MoeConfig onUpdate called with:', updates);
+          onUpdate(updates);
+        }} 
+        onUpdateMoe={onUpdateMoe} 
+      />
+
+      {/* MoD Configuration */}
+      <ModConfig 
+        config={config} 
+        onUpdate={(updates) => {
+          console.log('🌊 ModConfig onUpdate called with:', updates);
+          onUpdate(updates);
+        }} 
+        onUpdateMod={onUpdateMod} 
+      />
+
+      {/* Model Presets and Actions */}
+      <div className="flex flex-col lg:flex-row gap-6">
+        {/* Quick Presets */}
+        <ModelPresets 
+          onApplyPreset={(preset) => {
+            console.log('🎯 ModelConfigPage received preset:', preset);
+            console.log('🔄 Calling onUpdate with:', preset);
+            onUpdate(preset);
+            console.log('✨ onUpdate called successfully');
+          }} 
+        />
+        
+        {/* Configuration Actions */}
+        <div className="flex-1 premium-card rounded-xl p-6 content-container">
+          <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2 text-truncate">
+            <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-3a2 2 0 00-2 2v1a2 2 0 01-2 2H9a2 2 0 01-2-2v-1a2 2 0 00-2-2H2" />
+            </svg>
+            <span className="text-truncate">Configuration</span>
+          </h3>
+          <div className="space-y-3">
+            <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
+              <DialogTrigger asChild>
+                <Button 
+                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+                  onClick={() => {
+                    console.log('🚀 Create Model button clicked!');
+                    setShowCreateDialog(true);
+                  }}
+                >
+                  Create Model
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Create New Model</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="model-name">Model Name</Label>
+                    <Input
+                      id="model-name"
+                      value={modelName}
+                      onChange={(e) => setModelName(e.target.value)}
+                      placeholder="Enter model name..."
+                    />
+                  </div>
+                  <div className="flex justify-end space-x-2">
+                    <Button variant="outline" onClick={() => setShowCreateDialog(false)}>
+                      Cancel
+                    </Button>
+                    <Button 
+                      onClick={() => {
+                        console.log('🎯 Create Model dialog button clicked!');
+                        handleCreateModel();
+                      }}
+                      disabled={isCreating}
+                    >
+                      {isCreating ? 'Creating...' : 'Create Model'}
+                    </Button>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+
+            <div className="flex space-x-2">
+              <Button 
+                variant="outline" 
+                className="flex-1 bg-background text-foreground border-border hover:bg-muted"
+                onClick={() => {
+                  console.log('Export Config clicked');
+                  handleExportConfig();
+                }}
+              >
+                Export JSON
+              </Button>
+              <Button 
+                variant="outline" 
+                className="flex-1 bg-background text-foreground border-border hover:bg-muted"
+                onClick={() => {
+                  console.log('Import Config clicked');
+                  document.getElementById('config-import')?.click();
+                }}
+              >
+                Import JSON
+              </Button>
+              <input
+                id="config-import"
+                type="file"
+                accept=".json"
+                className="hidden"
+                onChange={handleImportConfig}
+              />
+            </div>
+            
+            <Button 
+              variant="outline" 
+              className="w-full bg-background text-foreground border-border hover:bg-muted"
+              onClick={() => {
+                console.log('Reset Config clicked');
+                handleResetConfig();
+              }}
+            >
+              Reset to Defaults
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Model List with Delete Buttons */}
+      <ModelList />
+    </div>
+  );
+}
