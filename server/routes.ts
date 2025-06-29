@@ -206,6 +206,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Reset model statuses - fix models incorrectly marked as "training"
+  app.post('/api/models/reset-status', async (req, res) => {
+    try {
+      const models = await storage.getModels();
+      const isTraining = trainingManager.isTraining();
+      
+      for (const model of models) {
+        if (model.status === 'training' && !isTraining) {
+          await storage.updateModel(model.id, { status: 'ready' });
+        }
+      }
+      
+      res.json({ success: true, message: 'Model statuses reset' });
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to reset model statuses' });
+    }
+  });
+
   app.post('/api/models/:id/load', async (req, res) => {
     try {
       const id = parseInt(req.params.id);

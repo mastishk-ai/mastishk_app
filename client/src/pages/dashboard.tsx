@@ -98,6 +98,35 @@ export default function Dashboard() {
     }
   });
 
+  // Model deletion mutation
+  const deleteModelMutation = useMutation({
+    mutationFn: async (modelId: number) => {
+      const response = await fetch(`/api/models/${modelId}`, {
+        method: 'DELETE'
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to delete model');
+      }
+      
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/models'] });
+      toast({
+        title: "Model Deleted",
+        description: "Model deleted successfully"
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Delete Failed", 
+        description: "Failed to delete model. Please try again.",
+        variant: "destructive"
+      });
+    }
+  });
+
   // Get page info based on current route
   const getPageInfo = (path: string) => {
     switch (path) {

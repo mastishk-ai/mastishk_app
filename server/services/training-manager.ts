@@ -311,6 +311,10 @@ export class TrainingManager extends EventEmitter {
     return this.activeTrainingRun;
   }
 
+  isTraining(): boolean {
+    return this.activeTrainingRun !== null;
+  }
+
   async deleteTrainingRun(id: number): Promise<boolean> {
     // Clean up training metrics
     await storage.deleteTrainingMetrics(id);

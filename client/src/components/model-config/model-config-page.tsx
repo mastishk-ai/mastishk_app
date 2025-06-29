@@ -8,6 +8,7 @@ import { ArchitectureConfig } from "./architecture-config";
 import { MoeConfig } from "./moe-config";
 import { ModConfig } from "./mod-config";
 import { ModelPresets } from "./model-presets";
+import { ModelList } from "./model-list";
 import { ModelConfig } from "@shared/schema";
 
 interface ModelConfigPageProps {
@@ -274,6 +275,9 @@ export function ModelConfigPage({
           </div>
         </div>
       </div>
+
+      {/* Model List with Delete Buttons */}
+      <ModelList />
     </div>
   );
 }

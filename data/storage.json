@@ -82,9 +82,9 @@
         "learning_rate": 0.0005
       },
       "id": 5,
-      "status": "training",
+      "status": "ready",
       "createdAt": "2025-06-29T10:52:40.154Z",
-      "updatedAt": "2025-06-29T10:52:46.986Z"
+      "updatedAt": "2025-06-29T11:25:27.601Z"
     },
     {
       "name": "main",
@@ -115,9 +115,9 @@
         "use_mod": false
       },
       "id": 6,
-      "status": "training",
+      "status": "ready",
       "createdAt": "2025-06-29T10:53:46.273Z",
-      "updatedAt": "2025-06-29T11:17:33.497Z"
+      "updatedAt": "2025-06-29T11:25:27.599Z"
     },
     {
       "name": "main",
@@ -148,9 +148,9 @@
         "use_mod": false
       },
       "id": 7,
-      "status": "training",
+      "status": "ready",
       "createdAt": "2025-06-29T11:13:11.904Z",
-      "updatedAt": "2025-06-29T11:14:09.427Z"
+      "updatedAt": "2025-06-29T11:25:27.597Z"
     }
   ],
   "trainingRuns": [
