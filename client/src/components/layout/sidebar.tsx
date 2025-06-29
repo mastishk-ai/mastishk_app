@@ -10,7 +10,8 @@ import {
   Save, 
   BarChart2, 
   Cpu,
-  Zap
+  Zap,
+  Box
 } from "lucide-react";
 
 interface SidebarProps {
@@ -59,6 +60,12 @@ export function Sidebar({ modelStatus }: SidebarProps) {
       label: "Analytics", 
       icon: BarChart2,
       description: "Performance analysis"
+    },
+    {
+      path: "/visualization",
+      label: "3D Visualizations",
+      icon: Box,
+      description: "Interactive 3D model insights"
     }
   ];
 
