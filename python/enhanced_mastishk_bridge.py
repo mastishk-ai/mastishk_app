@@ -37,10 +37,34 @@ except ImportError:
     TORCH_AVAILABLE = False
     print("PyTorch not available - running in compatibility mode")
     # Create mock torch and nn for compatibility
+    class MockOptim:
+        class Optimizer:
+            def __init__(self, *args, **kwargs):
+                pass
+                
+            def state_dict(self):
+                return {}
+                
+            def load_state_dict(self, state):
+                pass
+                
+            def zero_grad(self):
+                pass
+                
+            def step(self):
+                pass
+        
+        class Adam(Optimizer):
+            pass
+        
+        class SGD(Optimizer):
+            pass
+
     class MockTorch:
         def __init__(self):
             self.cuda = MockCuda()
             self.version = MockVersion()
+            self.optim = MockOptim()
             
         def device(self, device_str):
             return device_str
@@ -114,6 +138,7 @@ except ImportError:
     if not TORCH_AVAILABLE:
         torch = MockTorch()
         nn = MockNN()
+        optim = MockOptim()
         np = None
 
 # Vision imports (optional)

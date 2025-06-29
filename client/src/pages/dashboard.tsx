@@ -9,6 +9,7 @@ import { useTraining } from "@/hooks/use-training";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { ModelConfig } from "@shared/schema";
+import { formatDistanceToNow } from "date-fns";
 
 // Import page components
 import { ModelConfigPage } from "@/components/model-config/model-config-page";
@@ -30,6 +31,46 @@ export default function Dashboard() {
   const { trainingStatus } = useTraining();
   const queryClient = useQueryClient();
   const { toast } = useToast();
+
+  // Fetch models to get real model status
+  const { data: models } = useQuery({
+    queryKey: ['/api/models'],
+    queryFn: () => fetch('/api/models').then(res => res.json())
+  });
+
+  // Fetch training runs to get last training time
+  const { data: trainingRuns } = useQuery({
+    queryKey: ['/api/training-runs'],
+    queryFn: () => fetch('/api/training-runs').then(res => res.json())
+  });
+
+  // Calculate real model status
+  const getModelStatus = () => {
+    if ((trainingStatus as any)?.isTraining) {
+      return { status: 'training', lastTrained: 'Currently training...' };
+    }
+
+    if (!models || models.length === 0) {
+      return { status: 'idle', lastTrained: 'No models created yet' };
+    }
+
+    if (!trainingRuns || trainingRuns.length === 0) {
+      return { status: 'ready', lastTrained: 'Never trained' };
+    }
+
+    // Find the most recent completed training run
+    const completedRuns = trainingRuns.filter((run: any) => run.completedAt);
+    if (completedRuns.length === 0) {
+      return { status: 'ready', lastTrained: 'Never completed training' };
+    }
+
+    const mostRecentRun = completedRuns.reduce((latest: any, current: any) => {
+      return new Date(current.completedAt) > new Date(latest.completedAt) ? current : latest;
+    });
+
+    const lastTrainedTime = formatDistanceToNow(new Date(mostRecentRun.completedAt), { addSuffix: true });
+    return { status: 'ready', lastTrained: lastTrainedTime };
+  };
 
   // Legal Page Components (defined inside Dashboard to access proper scope)
   const AboutPageContent = () => (
@@ -456,10 +497,7 @@ export default function Dashboard() {
   return (
     <div className="flex h-screen overflow-hidden" style={{backgroundColor: 'hsl(var(--background))', color: 'hsl(var(--foreground))'}}>
       <Sidebar 
-        modelStatus={{
-          status: (trainingStatus as any)?.isTraining ? 'training' : 'ready',
-          lastTrained: '2 hours ago'
-        }}
+        modelStatus={getModelStatus()}
       />
       
       <div className="flex-1 flex flex-col overflow-hidden">
