@@ -2,8 +2,10 @@ import { useState, useCallback } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import { ModelConfig } from '@shared/schema';
+import { useToast } from '@/hooks/use-toast';
 
 export function useModelConfig() {
+  const { toast } = useToast();
   const [config, setConfig] = useState<ModelConfig>({
     // Core architecture defaults
     vocab_size: 32000,
@@ -102,8 +104,27 @@ export function useModelConfig() {
       });
       return response.json();
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      // Invalidate all model-related queries to ensure immediate UI updates
       queryClient.invalidateQueries({ queryKey: ['/api/models'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/training-runs'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/checkpoints'] });
+      
+      // Refetch models to ensure immediate availability in dropdowns
+      queryClient.refetchQueries({ queryKey: ['/api/models'] });
+      
+      // Show success notification
+      toast({
+        title: "Model Created Successfully",
+        description: `Model "${data.name}" is now available for training`,
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Model Creation Failed",
+        description: error instanceof Error ? error.message : "Failed to create model",
+        variant: "destructive",
+      });
     },
   });
 
