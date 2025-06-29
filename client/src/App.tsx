@@ -6,7 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { useEffect, useState } from "react";
 import NotFound from "@/pages/not-found";
 import Dashboard from "@/pages/dashboard";
-import VisualizationPage from "@/pages/visualization";
+import { VisualizationPage } from "@/pages/visualization";
 
 function Router() {
   return (

@@ -88,57 +88,96 @@ export function Sidebar({ modelStatus }: SidebarProps) {
   };
 
   return (
-    <div className="w-64 bg-sidebar-background border-r border-sidebar-border flex flex-col h-full">
-      {/* Logo & Title */}
-      <div className="p-6 border-b border-sidebar-border">
-        <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-            <Cpu className="w-5 h-5 text-white" />
+    <div className="w-72 glass-effect border-r flex flex-col animate-fade-in-up">
+      {/* Sidebar Header */}
+      <div className="p-8 border-b border-border/50">
+        <div className="flex items-center space-x-3 mb-2">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center">
+            <span className="text-white font-bold text-lg">M</span>
           </div>
           <div>
-            <h1 className="text-lg font-semibold text-sidebar-primary-foreground">Mastishk Studio</h1>
-            <p className="text-xs text-sidebar-foreground">Advanced LLM Platform</p>
+            <h1 className="text-xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
+              Mastishk Studio
+            </h1>
+            <p className="text-xs text-muted-foreground font-medium">
+              AI Transformer Platform
+            </p>
           </div>
         </div>
       </div>
       
-      {/* Navigation Menu */}
-      <nav className="flex-1 p-4 space-y-2">
-        <div className="space-y-1">
-          {navigationItems.map((item) => {
-            const isActive = location === item.path;
-            return (
-              <Link key={item.path} href={item.path}>
-                <button className={`sidebar-nav-item w-full ${isActive ? 'active' : ''}`}>
-                  <item.icon className="w-4 h-4" />
-                  <span className="text-sm font-medium">{item.label}</span>
-                </button>
-              </Link>
-            );
-          })}
-        </div>
-        
-        {/* Model Status */}
-        <div className="mt-8 p-3 bg-sidebar-primary rounded-lg border border-sidebar-border">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-medium text-sidebar-foreground">Model Status</span>
-            <div className={`w-2 h-2 rounded-full ${getStatusColor(modelStatus?.status || 'idle')}`}></div>
+      {/* Navigation */}
+      <nav className="flex-1 px-6 py-8">
+        <div className="space-y-8">
+          {/* Model Configuration */}
+          <div className="space-y-3">
+            <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-2">
+              Model
+            </h3>
+            {navigationItems.slice(0, 4).map((item) => {
+              const Icon = item.icon;
+              const isActive = location === item.path;
+              
+              return (
+                <Link key={item.path} href={item.path}>
+                  <a className={cn(
+                    "group flex items-center space-x-4 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300",
+                    isActive 
+                      ? "premium-button text-white shadow-lg" 
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50 premium-card"
+                  )}>
+                    <Icon className="w-5 h-5 transition-transform group-hover:scale-110" />
+                    <span>{item.label}</span>
+                  </a>
+                </Link>
+              );
+            })}
           </div>
-          <p className="text-sm text-sidebar-primary-foreground">{getStatusText(modelStatus?.status || 'idle')}</p>
-          {modelStatus?.lastTrained && (
-            <p className="text-xs text-sidebar-foreground mt-1">
-              Last trained: {modelStatus.lastTrained}
-            </p>
-          )}
+
+          {/* Analysis & Visualization */}
+          <div className="space-y-3">
+            <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-2">
+              Analysis
+            </h3>
+            {navigationItems.slice(4).map((item) => {
+              const Icon = item.icon;
+              const isActive = location === item.path;
+              
+              return (
+                <Link key={item.path} href={item.path}>
+                  <a className={cn(
+                    "group flex items-center space-x-4 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300",
+                    isActive 
+                      ? "premium-button text-white shadow-lg" 
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50 premium-card"
+                  )}>
+                    <Icon className="w-5 h-5 transition-transform group-hover:scale-110" />
+                    <span>{item.label}</span>
+                  </a>
+                </Link>
+              );
+            })}
+          </div>
         </div>
       </nav>
-      
-      {/* Quick Actions */}
-      <div className="p-4 border-t border-sidebar-border">
-        <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white" size="sm">
-          <Zap className="w-4 h-4 mr-2" />
-          Quick Train
-        </Button>
+
+      {/* Model Status */}
+      <div className="p-6 border-t border-border/50">
+        <div className="premium-card rounded-2xl p-5">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-sm font-bold text-foreground">Model Status</span>
+            <div className={cn(
+              "w-3 h-3 rounded-full shadow-lg",
+              modelStatus?.status === 'training' ? "bg-emerald-500 shadow-emerald-500/50 animate-pulse" :
+              modelStatus?.status === 'ready' ? "bg-blue-500 shadow-blue-500/50" : "bg-slate-400"
+            )} />
+          </div>
+          <p className="text-xs text-muted-foreground font-medium leading-relaxed">
+            {modelStatus?.status === 'training' ? 'Currently training model...' :
+             modelStatus?.status === 'ready' ? `Ready to use • ${modelStatus?.lastTrained || 'Recently'}` :
+             'No model configured yet'}
+          </p>
+        </div>
       </div>
     </div>
   );

@@ -1,115 +1,94 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { ThreeDVisualizer } from '@/components/3d-visualizer';
-import { AdvancedThreeDViewer } from '@/components/advanced-3d-viewer';
-import { GenerativeArchitecture3D } from '@/components/enhanced-generative-3d';
-import { Box, Zap, Sparkles, Layers, Moon, Sun } from 'lucide-react';
-import { ThemeToggle } from '@/components/ui/theme-toggle';
+import { useState } from 'react';
+import { Sidebar } from '../components/layout/sidebar';
+import { Header } from '../components/layout/header';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
+import { ThreeDVisualizer } from '../components/3d-visualizer';
+import { TrainingMonitor } from '../components/training/training-monitor';
+import { GenerativeArchitecture3D } from '../components/enhanced-generative-3d';
 
-export default function VisualizationPage() {
+export function VisualizationPage() {
+  const [activeTab, setActiveTab] = useState('architecture');
   return (
-    <div className="container mx-auto p-6">
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">3D Visualizations</h1>
-            <p className="text-muted-foreground">
-              Interactive 3D insights and advanced neural network visualization
-            </p>
+    <div className="flex h-screen overflow-hidden bg-background">
+      <Sidebar 
+        modelStatus={{
+          status: 'ready',
+          lastTrained: '2 hours ago'
+        }}
+      />
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <Header 
+          title="Model Visualization" 
+          subtitle="Explore your model's architecture and training dynamics"
+        />
+        <main className="flex-1 overflow-y-auto p-8 bg-gradient-to-br from-background to-muted/20">
+          <div className="max-w-7xl mx-auto space-y-8">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <TabsList className="grid w-full grid-cols-3 glass-effect p-2 rounded-2xl h-14">
+                <TabsTrigger 
+                  value="architecture" 
+                  className="rounded-xl font-semibold transition-all duration-300 data-[state=active]:premium-button data-[state=active]:text-white"
+                >
+                  3D Architecture
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="training" 
+                  className="rounded-xl font-semibold transition-all duration-300 data-[state=active]:premium-button data-[state=active]:text-white"
+                >
+                  Training Dynamics
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="generative" 
+                  className="rounded-xl font-semibold transition-all duration-300 data-[state=active]:premium-button data-[state=active]:text-white"
+                >
+                  Generative Architecture
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="architecture" className="space-y-8 animate-fade-in-up">
+                <div className="premium-card rounded-3xl p-8">
+                  <div className="mb-6">
+                    <h3 className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent mb-2">
+                      3D Model Architecture
+                    </h3>
+                    <p className="text-muted-foreground">Interactive exploration of your transformer model structure</p>
+                  </div>
+                  <div className="h-[650px] rounded-2xl overflow-hidden bg-gradient-to-br from-background to-muted/10">
+                    <ThreeDVisualizer />
+                  </div>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="training" className="space-y-8 animate-fade-in-up">
+                <div className="premium-card rounded-3xl p-8">
+                  <div className="mb-6">
+                    <h3 className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent mb-2">
+                      Training Dynamics
+                    </h3>
+                    <p className="text-muted-foreground">Real-time visualization of training progress and metrics</p>
+                  </div>
+                  <div className="h-[650px] rounded-2xl overflow-hidden bg-gradient-to-br from-background to-muted/10">
+                    <TrainingMonitor />
+                  </div>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="generative" className="space-y-8 animate-fade-in-up">
+                <div className="premium-card rounded-3xl p-8">
+                  <div className="mb-6">
+                    <h3 className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent mb-2">
+                      Generative Architecture
+                    </h3>
+                    <p className="text-muted-foreground">Advanced 3D visualization of generative transformer components</p>
+                  </div>
+                  <div className="h-[750px] rounded-2xl overflow-hidden bg-gradient-to-br from-background to-muted/10">
+                    <GenerativeArchitecture3D />
+                  </div>
+                </div>
+              </TabsContent>
+            </Tabs>
           </div>
-          <div className="flex items-center gap-2">
-            <Badge variant="secondary" className="gap-1">
-              <Sparkles className="w-3 h-3" />
-              WebGL Accelerated
-            </Badge>
-            <Badge variant="outline">
-              Real-time Rendering
-            </Badge>
-          </div>
-        </div>
-
-        <Tabs defaultValue="plotly" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="plotly" className="flex items-center gap-2">
-              <Box className="w-4 h-4" />
-              3D Model Visualizations
-            </TabsTrigger>
-            <TabsTrigger value="threejs" className="flex items-center gap-2">
-              <Zap className="w-4 h-4" />
-              Advanced 3D Neural Network
-            </TabsTrigger>
-            <TabsTrigger value="generative" className="flex items-center gap-2">
-              <Layers className="w-4 h-4" />
-              Generative Architecture
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="plotly" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Box className="w-5 h-5" />
-                  Interactive Plotly 3D Visualizations
-                </CardTitle>
-                <p className="text-sm text-muted-foreground">
-                  Six different 3D visualization types: Model Architecture, Attention Patterns, 
-                  Training Landscape, Feature Activations, Model Comparison, and Checkpoint Evolution
-                </p>
-              </CardHeader>
-              <CardContent>
-                <ThreeDVisualizer />
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="threejs" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Zap className="w-5 h-5" />
-                  Advanced Three.js Neural Network
-                </CardTitle>
-                <p className="text-sm text-muted-foreground">
-                  Real-time 3D transformer architecture with interactive controls, 
-                  particle systems, and dynamic animations
-                </p>
-              </CardHeader>
-              <CardContent>
-                <AdvancedThreeDViewer />
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="generative" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Layers className="w-5 h-5" />
-                  Enhanced Generative Transformer Architecture
-                </CardTitle>
-                <p className="text-sm text-muted-foreground">
-                  Detailed 3D visualization of your generative transformer with token flow, 
-                  layer-by-layer exploration, and interactive architecture controls
-                </p>
-              </CardHeader>
-              <CardContent>
-                <GenerativeArchitecture3D 
-                  modelConfig={{
-                    hidden_size: 4096,
-                    num_hidden_layers: 32,
-                    num_attention_heads: 32,
-                    vocab_size: 32000,
-                    intermediate_size: 11008,
-                    use_moe: false,
-                    use_mod: false
-                  }}
-                />
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+        </main>
       </div>
     </div>
   );

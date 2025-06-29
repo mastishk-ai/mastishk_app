@@ -1,4 +1,4 @@
-import { Moon, Sun } from 'lucide-react';
+import { Moon, Sun, Monitor } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -44,33 +44,33 @@ export function ThemeToggle() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon">
-          <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-          <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+        <Button variant="ghost" size="sm" className="w-10 h-10 rounded-xl premium-card hover:premium-button transition-all duration-300">
+          <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+          <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
           <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent align="end" className="w-52 premium-card p-2">
         <DropdownMenuItem 
-          onClick={() => changeTheme('light')}
-          className={theme === 'light' ? 'bg-accent' : ''}
+          onClick={() => changeTheme('light')} 
+          className="cursor-pointer rounded-lg px-3 py-2.5 font-semibold hover:bg-primary/10 transition-colors"
         >
-          <Sun className="mr-2 h-4 w-4" />
-          Light
+          <Sun className="mr-3 h-5 w-5" />
+          <span>Light Mode</span>
         </DropdownMenuItem>
         <DropdownMenuItem 
-          onClick={() => changeTheme('dark')}
-          className={theme === 'dark' ? 'bg-accent' : ''}
+          onClick={() => changeTheme('dark')} 
+          className="cursor-pointer rounded-lg px-3 py-2.5 font-semibold hover:bg-primary/10 transition-colors"
         >
-          <Moon className="mr-2 h-4 w-4" />
-          Dark
+          <Moon className="mr-3 h-5 w-5" />
+          <span>Dark Mode</span>
         </DropdownMenuItem>
         <DropdownMenuItem 
-          onClick={() => changeTheme('system')}
-          className={theme === 'system' ? 'bg-accent' : ''}
+          onClick={() => changeTheme('system')} 
+          className="cursor-pointer rounded-lg px-3 py-2.5 font-semibold hover:bg-primary/10 transition-colors"
         >
-          <Sun className="mr-2 h-4 w-4" />
-          System
+          <Monitor className="mr-3 h-5 w-5" />
+          <span>System</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

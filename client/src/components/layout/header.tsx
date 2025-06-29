@@ -41,29 +41,33 @@ export function Header({ title, subtitle, trainingStatus }: HeaderProps) {
           <p className="text-muted-foreground font-medium">{subtitle}</p>
         </div>
         
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-6">
           {/* Training Status Indicator */}
-          <div className="training-status-indicator">
-            <div className={`w-2 h-2 rounded-full ${getStatusColor(
-              trainingStatus?.isTraining || false, 
-              trainingStatus?.status || 'idle'
-            )}`}></div>
-            <span className="text-xs font-medium text-foreground">
-              {getStatusText(trainingStatus?.isTraining || false, trainingStatus?.status || 'idle')}
-            </span>
+          <div className="premium-card px-4 py-2 rounded-xl">
+            <div className="flex items-center space-x-3">
+              <div className={`w-3 h-3 rounded-full ${
+                trainingStatus?.isTraining 
+                  ? 'bg-emerald-500 shadow-lg shadow-emerald-500/50 animate-pulse' 
+                  : 'bg-slate-400'
+              }`} />
+              <span className="text-sm font-semibold">
+                {getStatusText(trainingStatus?.isTraining || false, trainingStatus?.status || 'idle')}
+              </span>
+            </div>
           </div>
           
           {/* Global Actions */}
-          <div className="flex items-center space-x-2">
-            <Button variant="ghost" size="sm">
-              <Download className="w-4 h-4" />
+          <div className="flex items-center space-x-3">
+            <Button variant="ghost" size="sm" className="premium-button bg-transparent hover:bg-primary/10 rounded-xl">
+              <Download className="w-5 h-5" />
             </Button>
-            <Button variant="ghost" size="sm">
-              <Upload className="w-4 h-4" />
+            <Button variant="ghost" size="sm" className="premium-button bg-transparent hover:bg-primary/10 rounded-xl">
+              <Upload className="w-5 h-5" />
             </Button>
-            <Button variant="ghost" size="sm">
-              <HelpCircle className="w-4 h-4" />
+            <Button variant="ghost" size="sm" className="premium-button bg-transparent hover:bg-primary/10 rounded-xl">
+              <HelpCircle className="w-5 h-5" />
             </Button>
+            <div className="h-8 w-px bg-border/50" />
             <ThemeToggle />
           </div>
         </div>

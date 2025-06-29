@@ -85,8 +85,14 @@ export function ThreeDVisualizer() {
     { name: '13B XL', total_parameters: 13_000_000_000, best_loss: 2.1, tokens_per_second: 50 }
   ];
 
+  const colorSchemes = {
+    mastishk: ['#8B5CF6', '#A78BFA', '#C4B5FD', '#DDD6FE', '#EDE9FE'],
+    neural: ['#06B6D4', '#22D3EE', '#67E8F9', '#A5F3FC', '#CFFAFE'],
+    energy: ['#F59E0B', '#FBBF24', '#FCD34D', '#FDE68A', '#FEF3C7']
+  };
+
   const createModelArchitecture3D = () => {
-    const colors = colorSchemes[colorScheme];
+    const colors = colorSchemes[currentColorScheme as keyof typeof colorSchemes];
     const { num_hidden_layers, hidden_size, num_attention_heads, vocab_size } = mockConfig;
     
     const data = [];
@@ -208,7 +214,7 @@ export function ThreeDVisualizer() {
   };
 
   const createTrainingLandscape3D = () => {
-    const colors = colorSchemes[colorScheme];
+    const colors = colorSchemes[currentColorScheme as keyof typeof colorSchemes];
     const steps = Array.from({length: 20}, (_, i) => i * 50);
     const learningRates = Array.from({length: 20}, (_, i) => 0.0001 * Math.exp(i * 0.1));
     
