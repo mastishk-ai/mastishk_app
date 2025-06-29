@@ -41,9 +41,9 @@ export function Sidebar({ modelStatus }: SidebarProps) {
     },
     {
       path: "/generation",
-      label: "Text Generation",
+      label: "Chat",
       icon: Edit3,
-      description: "Generate text with your model"
+      description: "Chat with your AI model"
     },
     {
       path: "/monitoring", 

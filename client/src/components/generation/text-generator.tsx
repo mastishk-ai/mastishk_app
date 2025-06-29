@@ -150,9 +150,9 @@ export function TextGenerator() {
       <CardHeader className="bg-muted/50">
         <CardTitle className="flex items-center">
           <Zap className="w-5 h-5 mr-2 text-green-500" />
-          Text Generation
+          Chat with AI
         </CardTitle>
-        <p className="text-sm text-muted-foreground">Generate text using your trained model</p>
+        <p className="text-sm text-muted-foreground">Chat with your trained Mastishk model</p>
       </CardHeader>
       <CardContent className="p-6 space-y-6">
         {/* Model Selection */}

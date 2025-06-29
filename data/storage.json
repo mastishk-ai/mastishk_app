@@ -150,7 +150,7 @@
       "id": 7,
       "status": "ready",
       "createdAt": "2025-06-29T11:13:11.904Z",
-      "updatedAt": "2025-06-29T11:27:47.646Z"
+      "updatedAt": "2025-06-29T11:52:56.401Z"
     }
   ],
   "trainingRuns": [
@@ -473,6 +473,46 @@
       "startedAt": "2025-06-29T11:27:25.274Z",
       "completedAt": "2025-06-29T11:27:47.643Z",
       "createdAt": "2025-06-29T11:27:25.260Z"
+    },
+    {
+      "modelId": 7,
+      "name": "v1",
+      "config": {
+        "learning_rate": 0.0005,
+        "batch_size": 2,
+        "gradient_accumulation_steps": 4,
+        "max_steps": 10000,
+        "eval_steps": 500,
+        "save_steps": 1000,
+        "warmup_steps": 100,
+        "max_grad_norm": 1,
+        "weight_decay": 0.01,
+        "mixed_precision": true,
+        "gradient_checkpointing": true,
+        "early_stopping": false,
+        "early_stopping_patience": 5,
+        "early_stopping_threshold": 0.0001,
+        "use_wandb": false,
+        "use_tensorboard": false,
+        "seed": 42,
+        "save_optimizer_state": true,
+        "save_scheduler_state": true,
+        "save_random_states": true,
+        "verify_integrity": true,
+        "max_checkpoints": 100,
+        "auto_save_interval": 1000,
+        "enable_weight_logging": false,
+        "weight_verification": false
+      },
+      "totalSteps": 10000,
+      "id": 9,
+      "status": "stopped",
+      "currentStep": 13,
+      "currentLoss": 2.5727,
+      "learningRate": 0.0005,
+      "startedAt": "2025-06-29T11:52:28.853Z",
+      "completedAt": "2025-06-29T11:52:56.400Z",
+      "createdAt": "2025-06-29T11:52:28.831Z"
     }
   ],
   "checkpoints": [],
@@ -1893,14 +1933,170 @@
       "layerSkipRate": null,
       "id": 118,
       "timestamp": "2025-06-29T11:27:47.382Z"
+    },
+    {
+      "trainingRunId": 9,
+      "step": 1,
+      "loss": 2.507,
+      "learningRate": 0.0005,
+      "gpuUtilization": 86.50893515906063,
+      "memoryUsage": 79.91293778247604,
+      "expertUtilization": null,
+      "layerSkipRate": null,
+      "id": 119,
+      "timestamp": "2025-06-29T11:52:30.957Z"
+    },
+    {
+      "trainingRunId": 9,
+      "step": 2,
+      "loss": 2.4997,
+      "learningRate": 0.0005,
+      "gpuUtilization": 88.66217012152558,
+      "memoryUsage": 76.23829641214448,
+      "expertUtilization": null,
+      "layerSkipRate": null,
+      "id": 120,
+      "timestamp": "2025-06-29T11:52:32.957Z"
+    },
+    {
+      "trainingRunId": 9,
+      "step": 3,
+      "loss": 2.5933,
+      "learningRate": 0.0005,
+      "gpuUtilization": 91.50553732367554,
+      "memoryUsage": 75.10694565639503,
+      "expertUtilization": null,
+      "layerSkipRate": null,
+      "id": 121,
+      "timestamp": "2025-06-29T11:52:34.958Z"
+    },
+    {
+      "trainingRunId": 9,
+      "step": 4,
+      "loss": 2.5,
+      "learningRate": 0.0005,
+      "gpuUtilization": 87.44967391954633,
+      "memoryUsage": 72.71255746883818,
+      "expertUtilization": null,
+      "layerSkipRate": null,
+      "id": 122,
+      "timestamp": "2025-06-29T11:52:36.958Z"
+    },
+    {
+      "trainingRunId": 9,
+      "step": 5,
+      "loss": 2.533,
+      "learningRate": 0.0005,
+      "gpuUtilization": 85.18263869028686,
+      "memoryUsage": 77.53947294510847,
+      "expertUtilization": null,
+      "layerSkipRate": null,
+      "id": 123,
+      "timestamp": "2025-06-29T11:52:38.958Z"
+    },
+    {
+      "trainingRunId": 9,
+      "step": 6,
+      "loss": 2.563,
+      "learningRate": 0.0005,
+      "gpuUtilization": 90.46700911446526,
+      "memoryUsage": 75.55402247548176,
+      "expertUtilization": null,
+      "layerSkipRate": null,
+      "id": 124,
+      "timestamp": "2025-06-29T11:52:40.959Z"
+    },
+    {
+      "trainingRunId": 9,
+      "step": 7,
+      "loss": 2.5776,
+      "learningRate": 0.0005,
+      "gpuUtilization": 90.95620397981779,
+      "memoryUsage": 80.84225761827243,
+      "expertUtilization": null,
+      "layerSkipRate": null,
+      "id": 125,
+      "timestamp": "2025-06-29T11:52:42.960Z"
+    },
+    {
+      "trainingRunId": 9,
+      "step": 8,
+      "loss": 2.5198,
+      "learningRate": 0.0005,
+      "gpuUtilization": 93.9368943907011,
+      "memoryUsage": 80.38299276223152,
+      "expertUtilization": null,
+      "layerSkipRate": null,
+      "id": 126,
+      "timestamp": "2025-06-29T11:52:44.960Z"
+    },
+    {
+      "trainingRunId": 9,
+      "step": 9,
+      "loss": 2.5089,
+      "learningRate": 0.0005,
+      "gpuUtilization": 89.02717942585954,
+      "memoryUsage": 74.32861158112618,
+      "expertUtilization": null,
+      "layerSkipRate": null,
+      "id": 127,
+      "timestamp": "2025-06-29T11:52:46.960Z"
+    },
+    {
+      "trainingRunId": 9,
+      "step": 10,
+      "loss": 2.5366,
+      "learningRate": 0.0005,
+      "gpuUtilization": 89.85661193716167,
+      "memoryUsage": 78.08355323848367,
+      "expertUtilization": null,
+      "layerSkipRate": null,
+      "id": 128,
+      "timestamp": "2025-06-29T11:52:48.959Z"
+    },
+    {
+      "trainingRunId": 9,
+      "step": 11,
+      "loss": 2.5645,
+      "learningRate": 0.0005,
+      "gpuUtilization": 92.80221103423877,
+      "memoryUsage": 82.95625447429548,
+      "expertUtilization": null,
+      "layerSkipRate": null,
+      "id": 129,
+      "timestamp": "2025-06-29T11:52:50.960Z"
+    },
+    {
+      "trainingRunId": 9,
+      "step": 12,
+      "loss": 2.5389,
+      "learningRate": 0.0005,
+      "gpuUtilization": 94.89413538312112,
+      "memoryUsage": 76.75937233172893,
+      "expertUtilization": null,
+      "layerSkipRate": null,
+      "id": 130,
+      "timestamp": "2025-06-29T11:52:52.961Z"
+    },
+    {
+      "trainingRunId": 9,
+      "step": 13,
+      "loss": 2.5727,
+      "learningRate": 0.0005,
+      "gpuUtilization": 88.25992931871869,
+      "memoryUsage": 77.05592253517463,
+      "expertUtilization": null,
+      "layerSkipRate": null,
+      "id": 131,
+      "timestamp": "2025-06-29T11:52:54.961Z"
     }
   ],
   "counters": {
     "userId": 1,
     "modelId": 8,
-    "trainingRunId": 9,
+    "trainingRunId": 10,
     "checkpointId": 4,
     "generationId": 1,
-    "metricId": 119
+    "metricId": 132
   }
 }

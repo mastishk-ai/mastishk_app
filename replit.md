@@ -97,7 +97,7 @@ Mastishk Transformer Studio is an advanced transformer experimentation platform 
 
 ## Changelog
 
-- June 29, 2025: **MAJOR UPDATE - Integrated Complete Multimodal Mastishk Transformer**
+- June 29, 2025: **MAJOR UPDATE - Integrated Complete Multimodal Mastishk Transformer + UI Improvements**
   - Replaced all mock implementations with user's original sophisticated transformer script
   - Implemented complete MoE (Mixture of Experts) with 8 experts and 2 experts per token
   - Added MoD (Mixture of Depths) with adaptive computation layers
@@ -108,6 +108,8 @@ Mastishk Transformer Studio is an advanced transformer experimentation platform 
   - Integrated MiniMax optimization with adversarial training
   - Created comprehensive checkpoint management with state preservation
   - Enhanced Python bridge with advanced training metrics and expert utilization tracking
+  - Renamed "Text Generation" to "Chat" for modern AI interface experience
+  - Preserved all 3D visualization components: ThreeDVisualizer and GenerativeArchitecture3D
   - All advanced features now functional: training, generation, checkpoints use real transformer architecture
 - June 29, 2025: Completed training control system with working Stop Training functionality
   - Fixed Stop Training button to properly handle mock training simulation

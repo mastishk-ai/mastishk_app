@@ -334,13 +334,13 @@ export function DocumentationPage() {
                 </Card>
               </section>
 
-              {/* Text Generation */}
+              {/* Chat */}
               <section id="generation">
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <Edit3 className="w-5 h-5" />
-                      Text Generation
+                      Chat with AI
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
