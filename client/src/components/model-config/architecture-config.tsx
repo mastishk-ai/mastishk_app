@@ -112,8 +112,11 @@ export function ArchitectureConfig({ config, onUpdate }: ArchitectureConfigProps
               <ParameterControl
                 key={key}
                 config={paramConfig}
-                value={(config as any)[key]}
-                onChange={(value) => onUpdate({ [key]: value } as any)}
+                value={(safeConfig as any)[key]}
+                onChange={(value) => {
+                  console.log(`📊 Parameter ${key} changed to:`, value);
+                  onUpdate({ [key]: value } as any);
+                }}
               />
             ))}
           </div>
