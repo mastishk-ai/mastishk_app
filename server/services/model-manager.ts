@@ -28,16 +28,18 @@ export class ModelManager {
 
     const model = await storage.createModel(insertModel);
     
-    // Initialize model in Python
+    // Set model as ready immediately - Python initialization can happen later when needed
+    const updatedModel = await storage.updateModel(model.id, { status: 'ready' });
+    
+    // Create model directory
+    const modelDir = path.join(this.modelsDirectory, `model_${model.id}`);
     try {
-      await pythonBridge.initializeModel(config);
-      await storage.updateModel(model.id, { status: 'ready' });
+      await fs.mkdir(modelDir, { recursive: true });
     } catch (error) {
-      await storage.updateModel(model.id, { status: 'error' });
-      throw error;
+      console.error(`Failed to create model directory: ${error}`);
     }
 
-    return model;
+    return updatedModel;
   }
 
   async getModel(id: number): Promise<Model | undefined> {

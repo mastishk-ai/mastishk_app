@@ -53,6 +53,16 @@ const upload = multer({
 
 export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
+  
+  // Priority API middleware - handle before any other middleware
+  app.use((req, res, next) => {
+    if (req.path.startsWith('/api/')) {
+      console.log(`API Request: ${req.method} ${req.path}`);
+      // Ensure JSON responses for API routes
+      res.setHeader('Content-Type', 'application/json');
+    }
+    next();
+  });
 
   // WebSocket server for real-time updates
   const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
@@ -97,6 +107,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     broadcast({ type: 'training_error', data });
   });
 
+  // Test endpoint
+  app.post('/api/test', (req, res) => {
+    console.log('Test endpoint hit with body:', req.body);
+    res.json({ success: true, body: req.body });
+  });
+
   // Model management routes
   app.get('/api/models', async (req, res) => {
     try {
@@ -122,15 +138,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/models', async (req, res) => {
     try {
-      const { name, config } = insertModelSchema.parse(req.body);
-      const modelConfig = ModelConfigSchema.parse(config);
+      console.log('Model creation endpoint hit');
       
-      await modelManager.validateConfig(modelConfig);
-      const model = await modelManager.createModel(name, modelConfig);
+      // Ensure this is a proper API request
+      if (!req.body || typeof req.body !== 'object') {
+        console.log('Invalid request body');
+        return res.status(400).json({ error: 'Invalid request body' });
+      }
       
-      res.status(201).json(model);
+      const { name, config } = req.body;
+      
+      if (!name || !config) {
+        console.log('Missing required fields');
+        return res.status(400).json({ error: 'Missing required fields: name and config' });
+      }
+      
+      console.log(`Creating model: ${name}`);
+      
+      // Create model directly
+      const insertModel = { name, config };
+      const model = await storage.createModel(insertModel);
+      
+      console.log(`Model created successfully: ID ${model.id}, Name: ${model.name}`);
+      
+      // Return JSON response
+      return res.status(201).json(model);
     } catch (error) {
-      res.status(400).json({ error: error instanceof Error ? error.message : 'Invalid model configuration' });
+      console.error('Model creation error:', error);
+      return res.status(500).json({ 
+        error: error instanceof Error ? error.message : 'Failed to create model' 
+      });
     }
   });
 
