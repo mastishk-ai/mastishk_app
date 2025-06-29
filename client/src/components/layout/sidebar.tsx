@@ -63,10 +63,16 @@ export function Sidebar({ modelStatus }: SidebarProps) {
       description: "Performance analysis"
     },
     {
-      path: "/visualization",
-      label: "3D Visualizations",
+      path: "/testing",
+      label: "Testing Suite",
+      icon: Zap,
+      description: "Component functionality testing"
+    },
+    {
+      path: "/docs",
+      label: "Documentation",
       icon: Box,
-      description: "Interactive 3D model insights"
+      description: "Comprehensive app documentation"
     }
   ];
 

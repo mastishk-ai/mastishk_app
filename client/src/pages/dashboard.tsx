@@ -14,6 +14,7 @@ import { MonitoringPage } from "@/components/monitoring/monitoring-page";
 import { CheckpointsPage } from "@/components/checkpoints/checkpoints-page";
 import { AnalyticsPageContent } from "@/components/analytics/analytics-page";
 import { TestingPage } from "@/components/testing/testing-page";
+import { DocumentationPage } from "@/components/documentation/documentation-page";
 
 export default function Dashboard() {
   const [location] = useLocation();
@@ -53,6 +54,11 @@ export default function Dashboard() {
           title: "Testing Suite",
           subtitle: "Test and verify component functionality"
         };
+      case "/docs":
+        return {
+          title: "Documentation",
+          subtitle: "Comprehensive guide and reference"
+        };
       default:
         return {
           title: "Mastishk© Configuration",
@@ -77,6 +83,8 @@ export default function Dashboard() {
         return <AnalyticsPage />;
       case "/testing":
         return <TestingPage />;
+      case "/docs":
+        return <DocumentationPage />;
       default:
         return <ModelConfigurationPage />;
     }
