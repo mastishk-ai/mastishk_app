@@ -97,11 +97,11 @@ export function Sidebar({ modelStatus }: SidebarProps) {
             <span className="text-white font-bold text-lg">M</span>
           </div>
           <div>
-            <h1 className="text-xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
-              Mastishk Studio
+            <h1 className="text-xl font-bold text-foreground">
+              <span className="font-extrabold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">Mastishk</span>
             </h1>
             <p className="text-xs text-muted-foreground font-medium">
-              AI Transformer Platform
+              Transformer Studio
             </p>
           </div>
         </div>
