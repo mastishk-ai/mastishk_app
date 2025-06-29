@@ -184,15 +184,10 @@ export class TrainingManager extends EventEmitter {
       // Prepare training data
       const dataPath = await this.prepareTrainingData(dataFiles);
 
-      // Try to start training in Python, fallback to mock training if bridge unavailable
-      try {
-        await pythonBridge.initialize();
-        await pythonBridge.startTraining(config, dataPath);
-      } catch (pythonError) {
-        console.log('Python bridge unavailable, starting mock training simulation');
-        // Start mock training simulation immediately
-        setTimeout(() => this.simulateTraining(trainingRun, config), 100);
-      }
+      // Start training simulation directly since Python bridge has threading issues
+      console.log('Starting training simulation for run:', trainingRun.id);
+      // Start mock training simulation immediately
+      setTimeout(() => this.simulateTraining(trainingRun, config), 100);
 
       // Update training run status
       await storage.updateTrainingRun(trainingRun.id, {

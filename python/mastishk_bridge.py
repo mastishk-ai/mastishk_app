@@ -187,41 +187,49 @@ class MastishkBridge:
         import time
         
         def training_loop():
-            step = 0
-            max_steps = config.get("max_steps", 1000)
-            initial_loss = 4.5
-            
-            while self.training_active and step < max_steps:
-                step += 1
+            try:
+                step = 0
+                max_steps = config.get("max_steps", 1000)
+                initial_loss = 4.5
                 
-                # Realistic loss decay
-                loss = initial_loss * (0.95 ** (step / 100))
-                learning_rate = config.get("learning_rate", 5e-4)
+                while self.training_active and step < max_steps:
+                    step += 1
+                    
+                    # Realistic loss decay
+                    loss = initial_loss * (0.95 ** (step / 100))
+                    learning_rate = config.get("learning_rate", 5e-4)
+                    
+                    # Advanced metrics from your implementation
+                    progress_data = {
+                        "step": step,
+                        "loss": round(loss, 6),
+                        "learningRate": learning_rate,
+                        "gpuUtilization": np.random().uniform(75, 95),
+                        "memoryUsage": np.random().uniform(60, 85),
+                        "expertUtilization": [np.random().uniform(0.1, 0.9) for _ in range(8)] if config.get("use_moe") else None,
+                        "layerSkipRate": np.random().uniform(0.1, 0.3) if config.get("use_mod") else None
+                    }
+                    
+                    self.send_message("training_progress", progress_data)
+                    time.sleep(1)  # 1 second per step
                 
-                # Advanced metrics from your implementation
-                progress_data = {
-                    "step": step,
-                    "loss": round(loss, 6),
-                    "learningRate": learning_rate,
-                    "gpuUtilization": np.random.uniform(75, 95),
-                    "memoryUsage": np.random.uniform(60, 85),
-                    "expertUtilization": [np.random.uniform(0.1, 0.9) for _ in range(8)] if config.get("use_moe") else None,
-                    "layerSkipRate": np.random.uniform(0.1, 0.3) if config.get("use_mod") else None
-                }
+                if self.training_active:
+                    self.send_message("training_complete", {
+                        "final_step": step,
+                        "final_loss": round(loss, 6),
+                        "status": "completed"
+                    })
                 
-                self.send_message("training_progress", progress_data)
-                time.sleep(1)  # 1 second per step
-            
-            if self.training_active:
-                self.send_message("training_complete", {
-                    "final_step": step,
-                    "final_loss": loss,
-                    "status": "completed"
+                self.training_active = False
+                
+            except Exception as e:
+                self.send_message("training_error", {
+                    "error": str(e),
+                    "traceback": traceback.format_exc()
                 })
-            
-            self.training_active = False
+                self.training_active = False
         
-        thread = threading.Thread(target=training_loop)
+        thread = threading.Thread(target=training_loop, daemon=True)
         thread.start()
     
     def handle_stop_training(self, data: Dict):

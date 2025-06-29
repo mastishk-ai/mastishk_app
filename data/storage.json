@@ -115,9 +115,9 @@
         "use_mod": false
       },
       "id": 6,
-      "status": "ready",
+      "status": "training",
       "createdAt": "2025-06-29T10:53:46.273Z",
-      "updatedAt": "2025-06-29T10:58:49.123Z"
+      "updatedAt": "2025-06-29T11:17:33.497Z"
     },
     {
       "name": "main",
@@ -393,6 +393,46 @@
       "startedAt": null,
       "completedAt": null,
       "createdAt": "2025-06-29T11:14:09.424Z"
+    },
+    {
+      "modelId": 6,
+      "name": "v1",
+      "config": {
+        "learning_rate": 0.0005,
+        "batch_size": 2,
+        "gradient_accumulation_steps": 4,
+        "max_steps": 10000,
+        "eval_steps": 500,
+        "save_steps": 1000,
+        "warmup_steps": 100,
+        "max_grad_norm": 1,
+        "weight_decay": 0.01,
+        "mixed_precision": true,
+        "gradient_checkpointing": true,
+        "early_stopping": false,
+        "early_stopping_patience": 5,
+        "early_stopping_threshold": 0.0001,
+        "use_wandb": false,
+        "use_tensorboard": false,
+        "seed": 42,
+        "save_optimizer_state": true,
+        "save_scheduler_state": true,
+        "save_random_states": true,
+        "verify_integrity": true,
+        "max_checkpoints": 100,
+        "auto_save_interval": 1000,
+        "enable_weight_logging": false,
+        "weight_verification": false
+      },
+      "totalSteps": 10000,
+      "id": 7,
+      "status": "running",
+      "currentStep": 0,
+      "currentLoss": null,
+      "learningRate": null,
+      "startedAt": "2025-06-29T11:17:33.614Z",
+      "completedAt": null,
+      "createdAt": "2025-06-29T11:17:33.495Z"
     }
   ],
   "checkpoints": [],
@@ -1686,7 +1726,7 @@
   "counters": {
     "userId": 1,
     "modelId": 8,
-    "trainingRunId": 7,
+    "trainingRunId": 8,
     "checkpointId": 2,
     "generationId": 1,
     "metricId": 108
