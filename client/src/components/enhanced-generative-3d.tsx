@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Play, Pause, RotateCcw, Eye, Settings } from 'lucide-react';
+import { getPlotlyLayout, getModelArchitectureColors } from '@/lib/theme';
 
 interface GenerativeArchitecture3DProps {
   modelConfig?: {
@@ -315,53 +316,33 @@ export function GenerativeArchitecture3D({ modelConfig }: GenerativeArchitecture
   const data = generateGenerativeArchitecture();
   
   const layout = {
-    title: {
-      text: `Generative Transformer Architecture<br><sub>${config.num_hidden_layers} Layers • ${config.num_attention_heads} Heads • ${config.hidden_size} Hidden • ${config.vocab_size} Vocab</sub>`,
-      x: 0.5,
-      font: { 
-        size: 18,
-        color: isDark ? '#ffffff' : '#000000'
-      }
-    },
+    ...getPlotlyLayout(isDark, `Generative Transformer Architecture - ${config.num_hidden_layers} Layers • ${config.num_attention_heads} Heads • ${config.hidden_size} Hidden • ${config.vocab_size} Vocab`),
     scene: {
+      ...getPlotlyLayout(isDark).scene,
       xaxis: { 
-        title: { text: 'Width', font: { color: isDark ? '#ffffff' : '#000000' } }, 
-        showgrid: true, 
-        range: [-4, 4],
-        gridcolor: isDark ? '#444444' : '#cccccc',
-        color: isDark ? '#ffffff' : '#000000'
+        ...getPlotlyLayout(isDark).scene?.xaxis,
+        title: { text: 'Width', font: { color: isDark ? '#f8fafc' : '#0f172a' } }, 
+        range: [-4, 4]
       },
       yaxis: { 
-        title: { text: 'Depth', font: { color: isDark ? '#ffffff' : '#000000' } }, 
-        showgrid: true, 
-        range: [-4, 4],
-        gridcolor: isDark ? '#444444' : '#cccccc',
-        color: isDark ? '#ffffff' : '#000000'
+        ...getPlotlyLayout(isDark).scene?.yaxis,
+        title: { text: 'Depth', font: { color: isDark ? '#f8fafc' : '#0f172a' } }, 
+        range: [-4, 4]
       },
       zaxis: { 
-        title: { text: 'Layer Progression', font: { color: isDark ? '#ffffff' : '#000000' } }, 
-        showgrid: true, 
-        range: [0, config.num_hidden_layers * 4],
-        gridcolor: isDark ? '#444444' : '#cccccc',
-        color: isDark ? '#ffffff' : '#000000'
+        ...getPlotlyLayout(isDark).scene?.zaxis,
+        title: { text: 'Layer Progression', font: { color: isDark ? '#f8fafc' : '#0f172a' } }, 
+        range: [0, config.num_hidden_layers * 4]
       },
       camera: { 
         eye: { x: 1.8, y: 1.8, z: 1.2 },
         center: { x: 0, y: 0, z: config.num_hidden_layers * 2 }
       },
-      bgcolor: isDark ? '#1a1a1a' : '#ffffff',
       aspectmode: 'manual' as const,
       aspectratio: { x: 1, y: 1, z: 2 }
     },
-    font: { 
-      size: 12,
-      color: isDark ? '#ffffff' : '#000000'
-    },
-    showlegend: false,
     height: 800,
-    margin: { l: 0, r: 0, t: 80, b: 0 },
-    paper_bgcolor: isDark ? '#1a1a1a' : '#ffffff',
-    plot_bgcolor: isDark ? '#1a1a1a' : '#ffffff'
+    margin: { l: 0, r: 0, t: 80, b: 0 }
   };
 
   const config_plotly = {

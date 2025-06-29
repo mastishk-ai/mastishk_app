@@ -36,11 +36,17 @@ interface ModelInfo {
   tokens_per_second: number;
 }
 
-const colorSchemes: Record<string, string[]> = {
-  mastishk: ['#4ECDC4', '#FF6B6B', '#45B7D1', '#96CEB4', '#FECA57'],
-  neural: ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe'],
-  energy: ['#fa709a', '#fee140', '#a8edea', '#fed6e3', '#d299c2']
-};
+const getColorSchemes = (isDark: boolean) => ({
+  mastishk: isDark 
+    ? ['#4ECDC4', '#FF6B6B', '#45B7D1', '#96CEB4', '#FECA57']
+    : ['#2dd4bf', '#ef4444', '#3b82f6', '#22c55e', '#f59e0b'],
+  neural: isDark
+    ? ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe'] 
+    : ['#5b21b6', '#581c87', '#c084fc', '#e11d48', '#2563eb'],
+  energy: isDark
+    ? ['#fa709a', '#fee140', '#a8edea', '#fed6e3', '#d299c2']
+    : ['#ec4899', '#eab308', '#06b6d4', '#f472b6', '#a855f7']
+});
 
 export function ThreeDVisualizer() {
   const [vizType, setVizType] = useState('architecture');
@@ -388,7 +394,7 @@ export function ThreeDVisualizer() {
   };
 
   const createFeatureActivations3D = () => {
-    const colors = colorSchemes[colorScheme];
+    const colors = getColorSchemes(isDark)[colorScheme];
     const numLayers = 12;
     const activations = [];
     
@@ -420,11 +426,21 @@ export function ThreeDVisualizer() {
         }
       ],
       layout: {
-        title: 'Feature Activations 3D',
+        ...getPlotlyLayout(isDark, 'Feature Activations 3D'),
         scene: {
-          xaxis: { title: 'Feature Space X' },
-          yaxis: { title: 'Feature Space Y' },
-          zaxis: { title: 'Layer Depth' },
+          ...getPlotlyLayout(isDark).scene,
+          xaxis: { 
+            ...getPlotlyLayout(isDark).scene?.xaxis,
+            title: { text: 'Feature Space X', font: { color: isDark ? '#f8fafc' : '#0f172a' } }
+          },
+          yaxis: { 
+            ...getPlotlyLayout(isDark).scene?.yaxis,
+            title: { text: 'Feature Space Y', font: { color: isDark ? '#f8fafc' : '#0f172a' } }
+          },
+          zaxis: { 
+            ...getPlotlyLayout(isDark).scene?.zaxis,
+            title: { text: 'Layer Depth', font: { color: isDark ? '#f8fafc' : '#0f172a' } }
+          },
           camera: { eye: { x: 1.5, y: 1.5, z: 1.5 } }
         },
         height: 600
