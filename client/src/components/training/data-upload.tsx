@@ -338,32 +338,8 @@ export function DataUpload() {
             </div>
           </div>
           
-          <TabsContent value="upload" className="mt-6">
-            <div className="space-y-4">
-              <div
-                className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors cursor-pointer ${
-                  dragActive 
-                    ? 'border-primary bg-primary/5' 
-                    : 'border-muted-foreground hover:border-muted-foreground/70'
-                }`}
-                onDragEnter={handleDrag}
-                onDragLeave={handleDrag}
-                onDragOver={handleDrag}
-                onDrop={handleDrop}
-                onClick={() => document.getElementById('file-upload')?.click()}
-              >
-                <UploadCloud className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                <p className="text-foreground font-medium mb-2">Drop files here or click to upload</p>
-                <p className="text-sm text-muted-foreground">Supports .txt, .json, .jsonl, .csv</p>
-                <input
-                  id="file-upload"
-                  type="file"
-                  className="hidden"
-                  multiple
-                accept=".txt,.json,.jsonl,.csv"
-                onChange={handleChange}
-              />
-            </div>
+          {/* Upload Progress and Status */}
+          <div className="space-y-4">
 
             {isUploading && (
               <div className="space-y-2 bg-background p-4 rounded-lg border">
@@ -474,7 +450,7 @@ export function DataUpload() {
               </div>
             )}
           </div>
-        </Tabs>
+        </div>
       </CardContent>
     </Card>
   );
