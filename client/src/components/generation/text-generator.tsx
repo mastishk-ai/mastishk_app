@@ -32,20 +32,38 @@ export function TextGenerator() {
   const { data: models = [], isLoading: modelsLoading, error: modelsError } = useQuery<Model[]>({
     queryKey: ['/api/models'],
     queryFn: async () => {
-      console.log('🔄 Text Generator - Fetching models from API...');
-      const response = await fetch('/api/models');
-      if (!response.ok) {
-        throw new Error(`Failed to fetch models: ${response.status}`);
+      console.log('🔄 Text Generator - Fetching models...');
+      try {
+        const response = await fetch('/api/models', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+        });
+        
+        if (!response.ok) {
+          console.error(`API Error: ${response.status} ${response.statusText}`);
+          throw new Error(`Failed to fetch models: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('📦 Text Generator - Raw API response:', data);
+        console.log('📦 Text Generator - Parsed models:', Array.isArray(data) ? data : []);
+        return Array.isArray(data) ? data : [];
+      } catch (error) {
+        console.error('🚨 Text Generator - Fetch error:', error);
+        throw error;
       }
-      const data = await response.json();
-      console.log('📦 Text Generator - Fetched models:', data);
-      return data;
     },
-    refetchInterval: 5000,
-    staleTime: 0, // Always refetch
+    refetchInterval: 2000,
+    staleTime: 0,
+    retry: 3,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
   });
 
-  console.log('🔍 Text Generator - Models:', models, 'Loading:', modelsLoading, 'Error:', modelsError);
+  console.log('🔍 Text Generator - Final state:', { models, modelsLoading, modelsError });
 
   // Generation mutation
   const generateMutation = useMutation({

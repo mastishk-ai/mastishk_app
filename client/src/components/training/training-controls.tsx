@@ -56,9 +56,11 @@ export function TrainingControls() {
         throw error;
       }
     },
-    refetchInterval: 3000, // Refetch every 3 seconds
+    refetchInterval: 2000, // Refetch every 2 seconds
     staleTime: 0,
     retry: 3,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
   });
 
   console.log('🔍 Training Controls - Final state:', { models, modelsLoading, modelsError });
