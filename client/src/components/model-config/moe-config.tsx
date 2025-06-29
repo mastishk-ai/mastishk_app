@@ -12,6 +12,8 @@ interface MoeConfigProps {
 }
 
 export function MoeConfig({ config, onUpdate, onUpdateMoe }: MoeConfigProps) {
+  console.log('🔀 MoeConfig rendered with config:', config);
+  
   // Provide default config if undefined
   const safeConfig = config || {
     use_moe: false,

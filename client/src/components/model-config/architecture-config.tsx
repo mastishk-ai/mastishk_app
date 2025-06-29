@@ -11,6 +11,8 @@ interface ArchitectureConfigProps {
 }
 
 export function ArchitectureConfig({ config, onUpdate }: ArchitectureConfigProps) {
+  console.log('🏗️ ArchitectureConfig rendered with config:', config);
+  
   // Provide default config if undefined
   const safeConfig = config || {
     hidden_size: 768,
@@ -19,7 +21,6 @@ export function ArchitectureConfig({ config, onUpdate }: ArchitectureConfigProps
     intermediate_size: 3072,
     vocab_size: 50257,
     max_position_embeddings: 2048,
-    architecture: 'standard',
     use_flash_attention: false,
     use_differential_attention: false,
     use_minimax: false,
@@ -126,8 +127,10 @@ export function ArchitectureConfig({ config, onUpdate }: ArchitectureConfigProps
                   <Switch
                     checked={(safeConfig as any)[key]}
                     onCheckedChange={(checked) => {
-                      console.log(`Toggle ${key}: ${checked}`);
-                      onUpdate({ ...safeConfig, [key]: checked } as any);
+                      console.log(`🔄 Toggle ${key}: ${checked}`);
+                      const updates = { [key]: checked };
+                      console.log('🔄 Sending updates:', updates);
+                      onUpdate(updates as any);
                     }}
                     className="mt-0.5"
                   />

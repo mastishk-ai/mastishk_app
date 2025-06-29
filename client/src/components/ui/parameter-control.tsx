@@ -60,7 +60,8 @@ export function ParameterControl({ config, value, onChange, className }: Paramet
               <Slider
                 value={[value]}
                 onValueChange={(values) => {
-                  console.log(`Slider ${label} changed to:`, values[0]);
+                  console.log(`🎚️ Slider ${label} changed to:`, values[0]);
+                  console.log('🎚️ Calling onChange with:', values[0]);
                   onChange(values[0]);
                 }}
                 min={range.min}

@@ -12,6 +12,8 @@ interface ModConfigProps {
 }
 
 export function ModConfig({ config, onUpdate, onUpdateMod }: ModConfigProps) {
+  console.log('🌊 ModConfig rendered with config:', config);
+  
   // Provide default config if undefined
   const safeConfig = config || {
     use_mod: false,
