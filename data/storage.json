@@ -1614,7 +1614,7 @@
     "userId": 1,
     "modelId": 7,
     "trainingRunId": 6,
-    "checkpointId": 1,
+    "checkpointId": 2,
     "generationId": 1,
     "metricId": 108
   }
