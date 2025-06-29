@@ -94,7 +94,8 @@ export default function Dashboard() {
             intermediate_size: 3072,
             vocab_size: 50257,
             max_position_embeddings: 2048,
-            architecture: 'standard',
+            hidden_act: 'swish',
+            num_key_value_heads: 12,
             use_flash_attention: false,
             use_differential_attention: false,
             use_minimax: false,
@@ -105,7 +106,9 @@ export default function Dashboard() {
             use_moe: false,
             use_mod: false
           }}
-          onUpdate={() => {}}
+          onUpdate={(updates) => {
+            console.log('Dashboard: Model config updated with:', updates);
+          }}
           onUpdateMoe={() => {}}
           onUpdateMod={() => {}}
           onCreateModel={() => {}}

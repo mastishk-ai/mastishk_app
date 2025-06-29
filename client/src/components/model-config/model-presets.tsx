@@ -7,7 +7,12 @@ interface ModelPresetsProps {
   onApplyPreset: (preset: Partial<ModelConfig>) => void;
 }
 
-export function ModelPresets({ onApplyPreset }: ModelPresetsProps) {
+export function ModelPresets({ onApplyPreset, currentConfig }: ModelPresetsProps) {
+  
+  const handlePresetApply = (preset: any) => {
+    console.log('Applying preset:', preset.name, preset);
+    onApplyPreset(preset);
+  };
   const presets = [
     {
       name: "Small (1B)",
