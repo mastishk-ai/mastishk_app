@@ -21,12 +21,28 @@ interface GenerativeArchitecture3DProps {
 }
 
 export function GenerativeArchitecture3D({ modelConfig }: GenerativeArchitecture3DProps) {
+  const [isDark, setIsDark] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [currentLayer, setCurrentLayer] = useState(0);
   const [showConnections, setShowConnections] = useState(true);
   const [showLabels, setShowLabels] = useState(true);
   const [viewMode, setViewMode] = useState<'overview' | 'layer' | 'flow'>('overview');
   const [animationSpeed, setAnimationSpeed] = useState(1000);
+
+  useEffect(() => {
+    const checkTheme = () => {
+      const theme = localStorage.getItem('theme') || 'light';
+      const isSystemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const shouldBeDark = theme === 'dark' || (theme === 'system' && isSystemDark);
+      setIsDark(shouldBeDark);
+    };
+
+    checkTheme();
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    mediaQuery.addEventListener('change', checkTheme);
+    
+    return () => mediaQuery.removeEventListener('change', checkTheme);
+  }, []);
 
   // Model configuration with defaults
   const config = {
@@ -302,31 +318,55 @@ export function GenerativeArchitecture3D({ modelConfig }: GenerativeArchitecture
     title: {
       text: `Generative Transformer Architecture<br><sub>${config.num_hidden_layers} Layers • ${config.num_attention_heads} Heads • ${config.hidden_size} Hidden • ${config.vocab_size} Vocab</sub>`,
       x: 0.5,
-      font: { size: 18 }
+      font: { 
+        size: 18,
+        color: isDark ? '#ffffff' : '#000000'
+      }
     },
     scene: {
-      xaxis: { title: { text: 'Width' }, showgrid: true, range: [-4, 4] },
-      yaxis: { title: { text: 'Depth' }, showgrid: true, range: [-4, 4] },
-      zaxis: { title: { text: 'Layer Progression' }, showgrid: true, range: [0, config.num_hidden_layers * 4] },
+      xaxis: { 
+        title: { text: 'Width', font: { color: isDark ? '#ffffff' : '#000000' } }, 
+        showgrid: true, 
+        range: [-4, 4],
+        gridcolor: isDark ? '#444444' : '#cccccc',
+        color: isDark ? '#ffffff' : '#000000'
+      },
+      yaxis: { 
+        title: { text: 'Depth', font: { color: isDark ? '#ffffff' : '#000000' } }, 
+        showgrid: true, 
+        range: [-4, 4],
+        gridcolor: isDark ? '#444444' : '#cccccc',
+        color: isDark ? '#ffffff' : '#000000'
+      },
+      zaxis: { 
+        title: { text: 'Layer Progression', font: { color: isDark ? '#ffffff' : '#000000' } }, 
+        showgrid: true, 
+        range: [0, config.num_hidden_layers * 4],
+        gridcolor: isDark ? '#444444' : '#cccccc',
+        color: isDark ? '#ffffff' : '#000000'
+      },
       camera: { 
         eye: { x: 1.8, y: 1.8, z: 1.2 },
         center: { x: 0, y: 0, z: config.num_hidden_layers * 2 }
       },
-      bgcolor: 'rgba(0,0,0,0)',
-      aspectmode: 'manual',
+      bgcolor: isDark ? '#1a1a1a' : '#ffffff',
+      aspectmode: 'manual' as const,
       aspectratio: { x: 1, y: 1, z: 2 }
     },
-    font: { size: 12 },
+    font: { 
+      size: 12,
+      color: isDark ? '#ffffff' : '#000000'
+    },
     showlegend: false,
     height: 800,
     margin: { l: 0, r: 0, t: 80, b: 0 },
-    paper_bgcolor: 'rgba(0,0,0,0)',
-    plot_bgcolor: 'rgba(0,0,0,0)'
+    paper_bgcolor: isDark ? '#1a1a1a' : '#ffffff',
+    plot_bgcolor: isDark ? '#1a1a1a' : '#ffffff'
   };
 
   const config_plotly = {
     displayModeBar: true,
-    modeBarButtonsToRemove: ['pan2d', 'lasso2d', 'select2d'],
+    modeBarButtonsToRemove: ['pan2d', 'lasso2d', 'select2d'] as any,
     displaylogo: false,
     responsive: true
   };
@@ -422,8 +462,8 @@ export function GenerativeArchitecture3D({ modelConfig }: GenerativeArchitecture
       <Card>
         <CardContent className="p-0">
           <Plot
-            data={data}
-            layout={layout}
+            data={data as any}
+            layout={layout as any}
             config={config_plotly}
             style={{ width: '100%', height: '800px' }}
           />

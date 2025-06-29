@@ -5,7 +5,8 @@ import { Badge } from '@/components/ui/badge';
 import { ThreeDVisualizer } from '@/components/3d-visualizer';
 import { AdvancedThreeDViewer } from '@/components/advanced-3d-viewer';
 import { GenerativeArchitecture3D } from '@/components/enhanced-generative-3d';
-import { Box, Zap, Sparkles, Layers } from 'lucide-react';
+import { Box, Zap, Sparkles, Layers, Moon, Sun } from 'lucide-react';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 export default function VisualizationPage() {
   return (
@@ -26,6 +27,7 @@ export default function VisualizationPage() {
             <Badge variant="outline">
               Real-time Rendering
             </Badge>
+            <ThemeToggle />
           </div>
         </div>
 

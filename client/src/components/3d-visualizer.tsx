@@ -621,7 +621,7 @@ export function ThreeDVisualizer() {
                     responsive: true,
                     displayModeBar: interactiveMode,
                     displaylogo: false,
-                    modeBarButtonsToRemove: ['pan2d', 'select2d', 'lasso2d']
+                    modeBarButtonsToRemove: ['pan2d', 'select2d', 'lasso2d'] as any
                   }}
                   style={{ width: '100%', height: '600px' }}
                 />
