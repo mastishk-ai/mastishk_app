@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -28,15 +28,40 @@ export function TrainingControls() {
     isResuming
   } = useTraining();
 
-  // Get available models
+  // Get available models with direct API call
   const { data: models = [], isLoading: modelsLoading, error: modelsError } = useQuery<Model[]>({
     queryKey: ['/api/models'],
+    queryFn: async () => {
+      console.log('🔄 Training Controls - Fetching models...');
+      try {
+        const response = await fetch('/api/models', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+        });
+        
+        if (!response.ok) {
+          console.error(`API Error: ${response.status} ${response.statusText}`);
+          throw new Error(`Failed to fetch models: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('📦 Training Controls - Raw API response:', data);
+        console.log('📦 Training Controls - Parsed models:', Array.isArray(data) ? data : []);
+        return Array.isArray(data) ? data : [];
+      } catch (error) {
+        console.error('🚨 Training Controls - Fetch error:', error);
+        throw error;
+      }
+    },
+    refetchInterval: 3000, // Refetch every 3 seconds
+    staleTime: 0,
+    retry: 3,
   });
 
-  // Debug logging
-  console.log('🔍 Training Controls - Models data:', models);
-  console.log('🔍 Training Controls - Loading:', modelsLoading);
-  console.log('🔍 Training Controls - Error:', modelsError);
+  console.log('🔍 Training Controls - Final state:', { models, modelsLoading, modelsError });
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -149,12 +174,19 @@ export function TrainingControls() {
                     value={selectedModelId || ''}
                     onChange={(e) => setSelectedModelId(e.target.value ? Number(e.target.value) : null)}
                   >
-                    <option value="">Select a model...</option>
-                    {models.map((model) => (
+                    <option value="">
+                      {modelsLoading ? 'Loading models...' : models.length === 0 ? 'No models available' : 'Select a model...'}
+                    </option>
+                    {models && models.length > 0 && models.map((model) => (
                       <option key={model.id} value={model.id}>
                         {model.name} ({model.status})
                       </option>
                     ))}
+                    {!modelsLoading && models.length === 0 && (
+                      <option value="" disabled>
+                        Create a model in Model Configuration first
+                      </option>
+                    )}
                   </select>
                 </div>
                 <div className="flex justify-end space-x-2">

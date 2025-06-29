@@ -28,15 +28,24 @@ export function TextGenerator() {
   
   const { toast } = useToast();
 
-  // Get available models
+  // Get available models with direct API call
   const { data: models = [], isLoading: modelsLoading, error: modelsError } = useQuery<Model[]>({
     queryKey: ['/api/models'],
+    queryFn: async () => {
+      console.log('🔄 Text Generator - Fetching models from API...');
+      const response = await fetch('/api/models');
+      if (!response.ok) {
+        throw new Error(`Failed to fetch models: ${response.status}`);
+      }
+      const data = await response.json();
+      console.log('📦 Text Generator - Fetched models:', data);
+      return data;
+    },
+    refetchInterval: 5000,
+    staleTime: 0, // Always refetch
   });
 
-  // Debug logging
-  console.log('🔍 Text Generator - Models data:', models);
-  console.log('🔍 Text Generator - Loading:', modelsLoading);
-  console.log('🔍 Text Generator - Error:', modelsError);
+  console.log('🔍 Text Generator - Models:', models, 'Loading:', modelsLoading, 'Error:', modelsError);
 
   // Generation mutation
   const generateMutation = useMutation({
@@ -136,12 +145,19 @@ export function TextGenerator() {
             value={selectedModelId || ''}
             onChange={(e) => setSelectedModelId(e.target.value ? Number(e.target.value) : null)}
           >
-            <option value="">Select a model...</option>
-            {models.map((model) => (
+            <option value="">
+              {modelsLoading ? 'Loading models...' : models.length === 0 ? 'No models available' : 'Select a model...'}
+            </option>
+            {models && models.length > 0 && models.map((model) => (
               <option key={model.id} value={model.id}>
                 {model.name} ({model.status})
               </option>
             ))}
+            {!modelsLoading && models.length === 0 && (
+              <option value="" disabled>
+                Create a model in Model Configuration first
+              </option>
+            )}
           </select>
         </div>
 
