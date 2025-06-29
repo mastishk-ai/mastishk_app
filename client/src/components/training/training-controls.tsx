@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { PlayCircle, Square, Pause, RotateCcw, AlertCircle } from "lucide-react";
 import { useTraining } from "@/hooks/use-training";
 import { useQuery } from "@tanstack/react-query";
+import { Model } from "@shared/schema";
 
 export function TrainingControls() {
   const [trainingName, setTrainingName] = useState("");
@@ -28,9 +29,14 @@ export function TrainingControls() {
   } = useTraining();
 
   // Get available models
-  const { data: models } = useQuery({
+  const { data: models = [], isLoading: modelsLoading, error: modelsError } = useQuery<Model[]>({
     queryKey: ['/api/models'],
   });
+
+  // Debug logging
+  console.log('🔍 Training Controls - Models data:', models);
+  console.log('🔍 Training Controls - Loading:', modelsLoading);
+  console.log('🔍 Training Controls - Error:', modelsError);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -144,7 +150,7 @@ export function TrainingControls() {
                     onChange={(e) => setSelectedModelId(e.target.value ? Number(e.target.value) : null)}
                   >
                     <option value="">Select a model...</option>
-                    {models?.map((model: any) => (
+                    {models.map((model) => (
                       <option key={model.id} value={model.id}>
                         {model.name} ({model.status})
                       </option>
@@ -205,8 +211,8 @@ export function TrainingControls() {
                   <li>✓ Model configuration complete</li>
                   <li>✓ Training data uploaded</li>
                   <li>✓ Training parameters set</li>
-                  <li className={models?.length > 0 ? 'text-green-400' : ''}>
-                    {models?.length > 0 ? '✓' : '○'} Model available for training
+                  <li className={Array.isArray(models) && models.length > 0 ? 'text-green-400' : ''}>
+                    {Array.isArray(models) && models.length > 0 ? '✓' : '○'} Model available for training
                   </li>
                 </ul>
               </div>

@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Copy, Zap, Download, Clock } from "lucide-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
-import { GenerationConfigSchema } from "@shared/schema";
+import { GenerationConfigSchema, Model } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 
 interface GenerationResult {
@@ -29,9 +29,14 @@ export function TextGenerator() {
   const { toast } = useToast();
 
   // Get available models
-  const { data: models } = useQuery({
+  const { data: models = [], isLoading: modelsLoading, error: modelsError } = useQuery<Model[]>({
     queryKey: ['/api/models'],
   });
+
+  // Debug logging
+  console.log('🔍 Text Generator - Models data:', models);
+  console.log('🔍 Text Generator - Loading:', modelsLoading);
+  console.log('🔍 Text Generator - Error:', modelsError);
 
   // Generation mutation
   const generateMutation = useMutation({
@@ -132,9 +137,9 @@ export function TextGenerator() {
             onChange={(e) => setSelectedModelId(e.target.value ? Number(e.target.value) : null)}
           >
             <option value="">Select a model...</option>
-            {models?.filter((model: any) => model.status === 'ready').map((model: any) => (
+            {models.map((model) => (
               <option key={model.id} value={model.id}>
-                {model.name}
+                {model.name} ({model.status})
               </option>
             ))}
           </select>
