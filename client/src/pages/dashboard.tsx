@@ -47,6 +47,11 @@ export default function Dashboard() {
           title: "Model Analytics",
           subtitle: "Comprehensive performance analysis"
         };
+      case "/testing":
+        return {
+          title: "Testing Suite",
+          subtitle: "Test and verify component functionality"
+        };
       default:
         return {
           title: "Mastishk© Configuration",
@@ -69,6 +74,8 @@ export default function Dashboard() {
         return <CheckpointManagerPage />;
       case "/analytics":
         return <AnalyticsPage />;
+      case "/testing":
+        return <TestingPage />;
       default:
         return <ModelConfigurationPage />;
     }
