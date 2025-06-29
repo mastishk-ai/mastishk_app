@@ -32,17 +32,25 @@ export function GenerativeArchitecture3D({ modelConfig }: GenerativeArchitecture
 
   useEffect(() => {
     const checkTheme = () => {
-      const theme = localStorage.getItem('theme') || 'light';
+      const theme = localStorage.getItem('theme') || 'system';
       const isSystemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       const shouldBeDark = theme === 'dark' || (theme === 'system' && isSystemDark);
       setIsDark(shouldBeDark);
     };
 
     checkTheme();
+    
+    // Listen for theme changes
+    const handleThemeChange = () => checkTheme();
+    window.addEventListener('themeChange', handleThemeChange);
+    
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     mediaQuery.addEventListener('change', checkTheme);
     
-    return () => mediaQuery.removeEventListener('change', checkTheme);
+    return () => {
+      window.removeEventListener('themeChange', handleThemeChange);
+      mediaQuery.removeEventListener('change', checkTheme);
+    };
   }, []);
 
   // Model configuration with defaults

@@ -27,7 +27,6 @@ export default function VisualizationPage() {
             <Badge variant="outline">
               Real-time Rendering
             </Badge>
-            <ThemeToggle />
           </div>
         </div>
 
