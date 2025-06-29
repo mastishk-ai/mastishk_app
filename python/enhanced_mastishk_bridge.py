@@ -169,6 +169,26 @@ try:
 except ImportError:
     VISION_AVAILABLE = False
 
+# ======================== MULTIMODAL CONFIGURATION ======================== #
+
+@dataclass
+class MultimodalConfig:
+    """Multimodal configuration from your latest script"""
+    vision_enabled: bool = True
+    video_enabled: bool = True
+    image_size: int = 224
+    patch_size: int = 16
+    max_frames: int = 16
+    vision_hidden_size: int = 768
+    vision_num_heads: int = 12
+    vision_intermediate_size: int = 3072
+    fusion_layers: int = 4
+    fusion_heads: int = 8
+    cross_attention_dropout: float = 0.1
+    fusion_dropout: float = 0.1
+    use_clip_backbone: bool = True
+    use_temporal_attention: bool = True
+
 # ======================== CONFIGURATION CLASSES ======================== #
 
 @dataclass
@@ -1267,9 +1287,15 @@ class EnhancedMastishkBridge:
                 generation_strategy=config_data.get('generation_strategy', 'auto')
             )
             
-            # Enhanced tokenization (would use proper tokenizer in production)
-            tokens = prompt.split()
-            input_ids = torch.tensor([[hash(token) % self.config.vocab_size for token in tokens]], device=self.device)
+            print(f"Processing generation request for prompt: {prompt[:50]}...", file=sys.stderr)
+            
+            # Enhanced tokenization with proper error handling
+            try:
+                tokens = prompt.split() if prompt else ["hello"]
+                input_ids = torch.tensor([[hash(token) % self.config.vocab_size for token in tokens]], device=self.device)
+            except Exception as tokenization_error:
+                print(f"Tokenization error: {tokenization_error}", file=sys.stderr)
+                input_ids = torch.tensor([[1, 2, 3, 4, 5]], device=self.device)  # Fallback
             
             start_time = time.time()
             

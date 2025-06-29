@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Copy, Zap, Download, Clock } from "lucide-react";
+import { Copy, Zap, Download, Clock, Image, Video, X } from "lucide-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { GenerationConfigSchema, Model } from "@shared/schema";
@@ -20,10 +20,13 @@ export function TextGenerator() {
   const [prompt, setPrompt] = useState("");
   const [output, setOutput] = useState("");
   const [selectedModelId, setSelectedModelId] = useState<number | null>(null);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
   const [generationStats, setGenerationStats] = useState<{
     tokens: number;
     time: number;
     speed: number;
+    multimodal?: boolean;
   } | null>(null);
   
   const { toast } = useToast();

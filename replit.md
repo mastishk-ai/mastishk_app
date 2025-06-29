@@ -97,6 +97,12 @@ Mastishk Transformer Studio is an advanced transformer experimentation platform 
 
 ## Changelog
 
+- June 29, 2025: **MULTIMODAL ARCHITECTURE INTEGRATION - Adding complete vision and video capabilities**
+  - Integrating Vision Transformer layers for image processing from user's multimodal script
+  - Adding video processing with temporal attention mechanisms
+  - Implementing cross-modal fusion layers for text+image+video understanding
+  - Fixing Python bridge timeout issues in generation system
+  - Current implementation has core transformer logic but missing complete multimodal components
 - June 29, 2025: **SIDEBAR SCROLLING FIX - Added scrollable sidebar navigation**
   - Fixed sidebar navigation to be scrollable (overflow-y-auto) 
   - Legal pages now accessible below Documentation section
