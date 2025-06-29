@@ -144,8 +144,10 @@ export function ModelConfigPage({
         {/* Quick Presets */}
         <ModelPresets 
           onApplyPreset={(preset) => {
-            console.log('ModelConfigPage applying preset:', preset);
+            console.log('🎯 ModelConfigPage received preset:', preset);
+            console.log('🔄 Calling onUpdate with:', preset);
             onUpdate(preset);
+            console.log('✨ onUpdate called successfully');
           }} 
         />
         

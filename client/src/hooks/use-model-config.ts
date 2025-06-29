@@ -68,9 +68,13 @@ export function useModelConfig() {
   const queryClient = useQueryClient();
 
   const updateConfig = useCallback((updates: Partial<ModelConfig>) => {
-    console.log('useModelConfig: Updating config with:', updates);
-    setConfig(prev => ({ ...prev, ...updates }));
-  }, []);
+    console.log('🎲 useModelConfig: Updating config with:', updates);
+    console.log('🔍 Previous config:', config);
+    const newConfig = { ...config, ...updates };
+    console.log('🆕 New config will be:', newConfig);
+    setConfig(newConfig);
+    console.log('💾 Config state updated');
+  }, [config]);
 
   const updateMoeConfig = useCallback((updates: Partial<NonNullable<ModelConfig['moe_config']>>) => {
     setConfig(prev => ({

@@ -174,12 +174,18 @@ export function ModelPresets({ onApplyPreset, currentConfig }: ModelPresetsProps
             <Button
               key={preset.name}
               variant="outline"
-              className="p-4 h-auto text-left overflow-hidden bg-background text-foreground border-border hover:bg-primary/10 active:bg-primary/20 transition-all duration-200 cursor-pointer"
-              onClick={() => {
-                console.log('🚀 Preset button clicked:', preset.name);
-                console.log('📋 Preset configuration:', preset.config);
-                onApplyPreset(preset.config);
-                console.log('✅ Preset applied successfully');
+              className="p-4 h-auto text-left overflow-hidden bg-background text-foreground border-border hover:bg-primary/10 active:bg-primary/20 transition-all duration-200 cursor-pointer active:scale-95"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('🔥 PRESET BUTTON CLICKED:', preset.name);
+                console.log('🔧 Config being applied:', preset.config);
+                try {
+                  onApplyPreset(preset.config);
+                  console.log('✅ PRESET APPLIED SUCCESSFULLY');
+                } catch (error) {
+                  console.error('❌ PRESET APPLICATION FAILED:', error);
+                }
               }}
             >
               <div className="w-full overflow-hidden">
