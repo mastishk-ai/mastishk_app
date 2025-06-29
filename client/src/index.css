@@ -199,6 +199,23 @@
     background-color: hsl(var(--primary) / 0.1) !important;
   }
 
+  /* Switch visibility improvements */
+  [data-radix-switch-root] {
+    background-color: hsl(var(--muted)) !important;
+    border: 2px solid hsl(var(--border)) !important;
+  }
+
+  [data-radix-switch-root][data-state="checked"] {
+    background-color: hsl(var(--primary)) !important;
+    border-color: hsl(var(--primary)) !important;
+  }
+
+  [data-radix-switch-thumb] {
+    background-color: hsl(var(--background)) !important;
+    border: 1px solid hsl(var(--border)) !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  }
+
   body {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
