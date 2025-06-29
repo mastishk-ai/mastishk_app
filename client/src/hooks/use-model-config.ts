@@ -69,12 +69,12 @@ export function useModelConfig() {
 
   const updateConfig = useCallback((updates: Partial<ModelConfig>) => {
     console.log('🎲 useModelConfig: Updating config with:', updates);
-    console.log('🔍 Previous config:', config);
-    const newConfig = { ...config, ...updates };
-    console.log('🆕 New config will be:', newConfig);
-    setConfig(newConfig);
-    console.log('💾 Config state updated');
-  }, [config]);
+    setConfig(prev => {
+      const newConfig = { ...prev, ...updates };
+      console.log('🆕 New config state:', newConfig);
+      return newConfig;
+    });
+  }, []);
 
   const updateMoeConfig = useCallback((updates: Partial<NonNullable<ModelConfig['moe_config']>>) => {
     setConfig(prev => ({

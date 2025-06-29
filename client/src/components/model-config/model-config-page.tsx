@@ -29,6 +29,7 @@ export function ModelConfigPage({
   isCreating,
   validateConfig
 }: ModelConfigPageProps) {
+  console.log('🎯 ModelConfigPage rendered with config:', config);
   const [modelName, setModelName] = useState("");
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const { toast } = useToast();
@@ -131,13 +132,33 @@ export function ModelConfigPage({
   return (
     <div className="space-y-6">
       {/* Architecture Configuration */}
-      <ArchitectureConfig config={config} onUpdate={onUpdate} />
+      <ArchitectureConfig 
+        config={config} 
+        onUpdate={(updates) => {
+          console.log('📐 ArchitectureConfig onUpdate called with:', updates);
+          onUpdate(updates);
+        }} 
+      />
 
       {/* MoE Configuration */}
-      <MoeConfig config={config} onUpdate={onUpdate} onUpdateMoe={onUpdateMoe} />
+      <MoeConfig 
+        config={config} 
+        onUpdate={(updates) => {
+          console.log('🔀 MoeConfig onUpdate called with:', updates);
+          onUpdate(updates);
+        }} 
+        onUpdateMoe={onUpdateMoe} 
+      />
 
       {/* MoD Configuration */}
-      <ModConfig config={config} onUpdate={onUpdate} onUpdateMod={onUpdateMod} />
+      <ModConfig 
+        config={config} 
+        onUpdate={(updates) => {
+          console.log('🌊 ModConfig onUpdate called with:', updates);
+          onUpdate(updates);
+        }} 
+        onUpdateMod={onUpdateMod} 
+      />
 
       {/* Model Presets and Actions */}
       <div className="flex flex-col lg:flex-row gap-6">
