@@ -171,6 +171,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.patch('/api/models/:id', async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const updates = req.body;
+      const model = await storage.updateModel(id, updates);
+      res.json(model);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to update model' });
+    }
+  });
+
   app.put('/api/models/:id', async (req, res) => {
     try {
       const id = parseInt(req.params.id);

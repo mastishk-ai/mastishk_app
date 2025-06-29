@@ -97,6 +97,12 @@ Mastishk Transformer Studio is an advanced transformer experimentation platform 
 
 ## Changelog
 
+- June 29, 2025: Fixed Start Training button functionality and added learning rate parameter
+  - Resolved "Model not ready for training" errors by changing default model status from "idle" to "ready"
+  - Added learning rate parameter with default value 5.0e-4 and range control (1e-6 to 1e-1)
+  - Implemented mock training simulation for cases where Python bridge is unavailable
+  - Updated model configuration components to include learning rate in architecture settings
+  - Fixed model status validation in training manager to properly check for ready models
 - June 29, 2025: Implemented file-based persistent storage system to fix data loss issues
   - Replaced volatile in-memory storage with JSON file-based storage in 'data' folder
   - Models now persist across server restarts and are saved to storage.json

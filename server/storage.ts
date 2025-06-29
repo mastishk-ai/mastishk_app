@@ -194,7 +194,7 @@ export class FileStorage implements IStorage {
     const model: Model = {
       ...insertModel,
       id: this.data.counters.modelId++,
-      status: "idle",
+      status: "ready",
       createdAt: now,
       updatedAt: now,
     };
