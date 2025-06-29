@@ -20,6 +20,10 @@ function Router() {
       <Route path="/testing" component={Dashboard} />
       <Route path="/docs" component={Dashboard} />
       <Route path="/visualization" component={VisualizationPage} />
+      <Route path="/about" component={Dashboard} />
+      <Route path="/contact" component={Dashboard} />
+      <Route path="/privacy" component={Dashboard} />
+      <Route path="/terms" component={Dashboard} />
       <Route component={NotFound} />
     </Switch>
   );

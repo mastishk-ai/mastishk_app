@@ -200,8 +200,32 @@ export function Sidebar({ modelStatus }: SidebarProps) {
         </div>
       </div>
 
-      {/* Copyright */}
+      {/* Footer Links */}
       <div className="p-4 border-t border-border/50 mt-auto">
+        <div className="grid grid-cols-2 gap-2 mb-4">
+          <Link href="/about">
+            <a className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+              About
+            </a>
+          </Link>
+          <Link href="/contact">
+            <a className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+              Contact Us
+            </a>
+          </Link>
+          <Link href="/privacy">
+            <a className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+              Privacy Policy
+            </a>
+          </Link>
+          <Link href="/terms">
+            <a className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+              Terms of Service
+            </a>
+          </Link>
+        </div>
+        
+        {/* Copyright */}
         <div className="text-center">
           <p className="text-xs text-muted-foreground">
             © 2025 <span className="font-semibold">Aman Sharma</span>

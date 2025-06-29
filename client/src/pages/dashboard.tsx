@@ -19,6 +19,10 @@ import { CheckpointsPage } from "@/components/checkpoints/checkpoints-page";
 import { AnalyticsPageContent } from "@/components/analytics/analytics-page";
 import { TestingPage } from "@/components/testing/testing-page";
 import { DocumentationPage } from "@/components/documentation/documentation-page";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Mail, MapPin, Phone, Globe, Shield, FileText, Heart, Users } from "lucide-react";
 
 export default function Dashboard() {
   const [location] = useLocation();
@@ -26,6 +30,208 @@ export default function Dashboard() {
   const { trainingStatus } = useTraining();
   const queryClient = useQueryClient();
   const { toast } = useToast();
+
+  // Legal Page Components (defined inside Dashboard to access proper scope)
+  const AboutPageContent = () => (
+    <div className="space-y-8">
+      <Card className="premium-card">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Heart className="w-5 h-5 text-primary" />
+            About Mastishk Transformer Studio
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="space-y-4">
+            <p className="text-muted-foreground leading-relaxed">
+              Mastishk Transformer Studio is an advanced platform for transformer experimentation, 
+              research, and development. Built with cutting-edge technology, it provides researchers 
+              and developers with powerful tools for creating, training, and analyzing sophisticated 
+              transformer models.
+            </p>
+            
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-3">
+                <h3 className="font-semibold text-lg">Key Features</h3>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li>• Advanced transformer architecture configuration</li>
+                  <li>• Real-time training monitoring and analytics</li>
+                  <li>• Interactive 3D model visualization</li>
+                  <li>• Comprehensive checkpoint management</li>
+                  <li>• MoE, MoD, and Flash Attention support</li>
+                </ul>
+              </div>
+              
+              <div className="space-y-3">
+                <h3 className="font-semibold text-lg">Technology Stack</h3>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li>• React with TypeScript frontend</li>
+                  <li>• Node.js/Express backend</li>
+                  <li>• Python ML integration</li>
+                  <li>• PostgreSQL database</li>
+                  <li>• Modern UI with shadcn/ui</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+
+  const ContactPageContent = () => (
+    <div className="space-y-8">
+      <Card className="premium-card">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Mail className="w-5 h-5 text-primary" />
+            Contact Information
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <Users className="w-5 h-5 text-primary" />
+                <div>
+                  <h3 className="font-semibold">Developer</h3>
+                  <p className="text-sm text-muted-foreground">Aman Sharma</p>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-3">
+                <Globe className="w-5 h-5 text-primary" />
+                <div>
+                  <h3 className="font-semibold">Platform</h3>
+                  <p className="text-sm text-muted-foreground">Mastishk Transformer Studio</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <FileText className="w-5 h-5 text-primary" />
+                <div>
+                  <h3 className="font-semibold">Support</h3>
+                  <p className="text-sm text-muted-foreground">Documentation and guides available</p>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-3">
+                <Shield className="w-5 h-5 text-primary" />
+                <div>
+                  <h3 className="font-semibold">Security</h3>
+                  <p className="text-sm text-muted-foreground">Privacy-focused development</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+
+  const PrivacyPageContent = () => (
+    <div className="space-y-8">
+      <Card className="premium-card">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Shield className="w-5 h-5 text-primary" />
+            Privacy Policy
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="space-y-4">
+            <div>
+              <h3 className="font-semibold mb-2">Data Collection</h3>
+              <p className="text-sm text-muted-foreground">
+                Mastishk Transformer Studio operates as a local development platform. 
+                Your model configurations, training data, and generated content remain 
+                on your local system and are not transmitted to external servers.
+              </p>
+            </div>
+            
+            <div>
+              <h3 className="font-semibold mb-2">Local Storage</h3>
+              <p className="text-sm text-muted-foreground">
+                All data including model checkpoints, training progress, and configurations 
+                are stored locally on your machine. No personal or model data is shared 
+                with third parties.
+              </p>
+            </div>
+            
+            <div>
+              <h3 className="font-semibold mb-2">Security</h3>
+              <p className="text-sm text-muted-foreground">
+                The platform is designed with privacy-first principles. Your research 
+                and development work remains confidential and under your complete control.
+              </p>
+            </div>
+            
+            <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+              Privacy-First Design
+            </Badge>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+
+  const TermsPageContent = () => (
+    <div className="space-y-8">
+      <Card className="premium-card">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <FileText className="w-5 h-5 text-primary" />
+            Terms of Service
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="space-y-4">
+            <div>
+              <h3 className="font-semibold mb-2">Usage License</h3>
+              <p className="text-sm text-muted-foreground">
+                Mastishk Transformer Studio is provided for research and development purposes. 
+                Users are granted permission to use the platform for transformer model 
+                experimentation and analysis.
+              </p>
+            </div>
+            
+            <div>
+              <h3 className="font-semibold mb-2">Intellectual Property</h3>
+              <p className="text-sm text-muted-foreground">
+                Users retain full ownership of their model architectures, training data, 
+                and generated content. The platform source code and design remain 
+                the property of the developer.
+              </p>
+            </div>
+            
+            <div>
+              <h3 className="font-semibold mb-2">Responsibility</h3>
+              <p className="text-sm text-muted-foreground">
+                Users are responsible for their use of the platform and any models 
+                created. The platform is provided "as-is" for educational and research purposes.
+              </p>
+            </div>
+            
+            <div>
+              <h3 className="font-semibold mb-2">Updates</h3>
+              <p className="text-sm text-muted-foreground">
+                These terms may be updated to reflect platform improvements and changes. 
+                Continued use constitutes acceptance of updated terms.
+              </p>
+            </div>
+            
+            <div className="pt-4 border-t">
+              <p className="text-xs text-muted-foreground">
+                Last updated: June 29, 2025
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
 
   // State for model configuration
   const [modelConfig, setModelConfig] = useState<ModelConfig>({
@@ -165,6 +371,26 @@ export default function Dashboard() {
           title: "Documentation",
           subtitle: "Comprehensive guide and reference"
         };
+      case "/about":
+        return {
+          title: "About Mastishk",
+          subtitle: "Advanced transformer experimentation platform"
+        };
+      case "/contact":
+        return {
+          title: "Contact Us",
+          subtitle: "Get in touch with our team"
+        };
+      case "/privacy":
+        return {
+          title: "Privacy Policy",
+          subtitle: "How we protect your data and privacy"
+        };
+      case "/terms":
+        return {
+          title: "Terms of Service",
+          subtitle: "Terms and conditions for using Mastishk"
+        };
       default:
         return {
           title: "Mastishk© Configuration",
@@ -191,6 +417,14 @@ export default function Dashboard() {
         return <TestingPage />;
       case "/docs":
         return <DocumentationPage />;
+      case "/about":
+        return <AboutPageContent />;
+      case "/contact":
+        return <ContactPageContent />;
+      case "/privacy":
+        return <PrivacyPageContent />;
+      case "/terms":
+        return <TermsPageContent />;
       default:
         return <ModelConfigPage 
           config={modelConfig}
