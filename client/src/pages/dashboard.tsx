@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useLocation } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Sidebar } from "@/components/layout/sidebar";
@@ -7,6 +8,7 @@ import { useModelConfig } from "@/hooks/use-model-config";
 import { useTraining } from "@/hooks/use-training";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { ModelConfig } from "@shared/schema";
 
 // Import page components
 import { ModelConfigPage } from "@/components/model-config/model-config-page";
@@ -24,6 +26,33 @@ export default function Dashboard() {
   const { trainingStatus } = useTraining();
   const queryClient = useQueryClient();
   const { toast } = useToast();
+
+  // State for model configuration
+  const [modelConfig, setModelConfig] = useState<ModelConfig>({
+    hidden_size: 768,
+    num_hidden_layers: 12,
+    num_attention_heads: 12,
+    intermediate_size: 3072,
+    vocab_size: 50257,
+    max_position_embeddings: 2048,
+    hidden_act: 'swish',
+    num_key_value_heads: 12,
+    use_flash_attention: false,
+    use_differential_attention: false,
+    differential_lambda_init: 0.5,
+    use_minimax: false,
+    minimax_layer_frequency: 4,
+    minimax_adversarial_epsilon: 0.1,
+    minimax_iterations: 3,
+    lolcats_enabled: false,
+    lolcats_compression_dim: 512,
+    use_multi_token_prediction: false,
+    n_predict_tokens: 4,
+    rms_norm_eps: 1e-5,
+    initializer_range: 0.02,
+    use_moe: false,
+    use_mod: false
+  });
 
   // Model creation mutation
   const createModelMutation = useMutation({
@@ -133,46 +162,25 @@ export default function Dashboard() {
       case "/docs":
         return <DocumentationPage />;
       default:
-        // Get current config state - you might want to move this to a state variable
-        const currentConfig = {
-          hidden_size: 768,
-          num_hidden_layers: 12,
-          num_attention_heads: 12,
-          intermediate_size: 3072,
-          vocab_size: 50257,
-          max_position_embeddings: 2048,
-          hidden_act: 'swish',
-          num_key_value_heads: 12,
-          use_flash_attention: false,
-          use_differential_attention: false,
-          differential_lambda_init: 0.5,
-          use_minimax: false,
-          minimax_layer_frequency: 4,
-          minimax_adversarial_epsilon: 0.1,
-          minimax_iterations: 3,
-          lolcats_enabled: false,
-          lolcats_compression_dim: 512,
-          use_multi_token_prediction: false,
-          n_predict_tokens: 4,
-          rms_norm_eps: 1e-5,
-          initializer_range: 0.02,
-          use_moe: false,
-          use_mod: false
-        };
-
         return <ModelConfigPage 
-          config={currentConfig}
+          config={modelConfig}
           onUpdate={(updates) => {
             console.log('Dashboard: Model config updated with:', updates);
-            // Here you would typically update the state with the new config
+            setModelConfig(prev => ({ ...prev, ...updates }));
           }}
-          onUpdateMoe={() => {}}
-          onUpdateMod={() => {}}
+          onUpdateMoe={(moeUpdates) => {
+            console.log('Dashboard: MoE config updated with:', moeUpdates);
+            setModelConfig(prev => ({ ...prev, ...moeUpdates }));
+          }}
+          onUpdateMod={(modUpdates) => {
+            console.log('Dashboard: MoD config updated with:', modUpdates);
+            setModelConfig(prev => ({ ...prev, ...modUpdates }));
+          }}
           onCreateModel={(modelData) => {
             console.log('Dashboard: Creating model with data:', modelData);
             createModelMutation.mutate({
               name: modelData.name,
-              config: currentConfig
+              config: modelConfig
             });
           }}
           isCreating={createModelMutation.isPending}

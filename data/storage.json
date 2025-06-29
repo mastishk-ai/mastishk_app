@@ -39,6 +39,38 @@
       "status": "idle",
       "createdAt": "2025-06-29T10:24:52.806Z",
       "updatedAt": "2025-06-29T10:24:52.806Z"
+    },
+    {
+      "name": "ghp",
+      "config": {
+        "hidden_size": 768,
+        "num_hidden_layers": 12,
+        "num_attention_heads": 12,
+        "intermediate_size": 3072,
+        "vocab_size": 50257,
+        "max_position_embeddings": 2048,
+        "hidden_act": "swish",
+        "num_key_value_heads": 12,
+        "use_flash_attention": false,
+        "use_differential_attention": false,
+        "differential_lambda_init": 0.5,
+        "use_minimax": false,
+        "minimax_layer_frequency": 4,
+        "minimax_adversarial_epsilon": 0.1,
+        "minimax_iterations": 3,
+        "lolcats_enabled": false,
+        "lolcats_compression_dim": 512,
+        "use_multi_token_prediction": false,
+        "n_predict_tokens": 4,
+        "rms_norm_eps": 0.00001,
+        "initializer_range": 0.02,
+        "use_moe": false,
+        "use_mod": false
+      },
+      "id": 4,
+      "status": "idle",
+      "createdAt": "2025-06-29T10:40:22.833Z",
+      "updatedAt": "2025-06-29T10:40:22.833Z"
     }
   ],
   "trainingRuns": [],
@@ -47,7 +79,7 @@
   "trainingMetrics": [],
   "counters": {
     "userId": 1,
-    "modelId": 4,
+    "modelId": 5,
     "trainingRunId": 1,
     "checkpointId": 1,
     "generationId": 1,

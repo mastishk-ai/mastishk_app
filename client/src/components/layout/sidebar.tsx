@@ -14,6 +14,7 @@ import {
   Zap,
   Box
 } from "lucide-react";
+import logoImage from "@assets/Copilot_20250629_034156_1751193748480.png";
 
 interface SidebarProps {
   modelStatus?: {
@@ -99,8 +100,12 @@ export function Sidebar({ modelStatus }: SidebarProps) {
       {/* Sidebar Header */}
       <div className="p-8 border-b border-border/50">
         <div className="flex items-center space-x-3 mb-2">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center">
-            <span className="text-white font-bold text-lg">M</span>
+          <div className="w-12 h-12 rounded-xl flex items-center justify-center">
+            <img 
+              src={logoImage} 
+              alt="Mastishk Logo" 
+              className="w-full h-full object-contain"
+            />
           </div>
           <div>
             <h1 className="text-xl font-bold text-foreground">

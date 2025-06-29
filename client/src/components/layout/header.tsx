@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Download, Upload, HelpCircle } from "lucide-react";
+import logoImage from "@assets/Copilot_20250629_034156_1751193748480.png";
 
 interface HeaderProps {
   title: string;
@@ -34,13 +35,22 @@ export function Header({ title, subtitle, trainingStatus }: HeaderProps) {
   return (
     <header className="glass-effect border-b px-8 py-6 animate-fade-in-up">
       <div className="flex items-center justify-between">
-        <div className="space-y-1">
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
-            <span className="font-extrabold">{title.includes('Mastishk') ? 'Mastishk' : title}</span>
-            {title.includes('Mastishk') && <span className="font-normal ml-2">{title.replace('Mastishk ', '')}</span>}
-            {!title.includes('Mastishk') && title}
-          </h1>
-          <p className="text-muted-foreground font-medium">{subtitle}</p>
+        <div className="flex items-center space-x-3">
+          <div className="w-8 h-8 flex items-center justify-center">
+            <img 
+              src={logoImage} 
+              alt="Mastishk Logo" 
+              className="w-full h-full object-contain"
+            />
+          </div>
+          <div className="space-y-1">
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
+              <span className="font-extrabold">{title.includes('Mastishk') ? 'Mastishk' : title}</span>
+              {title.includes('Mastishk') && <span className="font-normal ml-2">{title.replace('Mastishk ', '')}</span>}
+              {!title.includes('Mastishk') && title}
+            </h1>
+            <p className="text-muted-foreground font-medium">{subtitle}</p>
+          </div>
         </div>
         
         <div className="flex items-center space-x-6">
