@@ -11,6 +11,7 @@ import { modelManager } from "./services/model-manager";
 import { trainingManager } from "./services/training-manager";
 import { checkpointManager } from "./services/checkpoint-manager";
 import { pythonBridge } from "./services/python-bridge";
+import crawlRoutes from './crawl.js';
 
 import { 
   insertModelSchema, 

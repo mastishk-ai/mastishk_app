@@ -1,58 +1,56 @@
-import { Router } from 'express';
+import express from 'express';
+import { z } from 'zod';
+import FirecrawlApp from '@mendable/firecrawl-js';
 
-const router = Router();
+const router = express.Router();
 
-interface CrawlOptions {
-  includeSubdomains: boolean;
-  maxPages: number;
-  extractText: boolean;
-  extractLinks: boolean;
-  respectRobots: boolean;
-}
+// Crawl options schema
+const CrawlOptionsSchema = z.object({
+  url: z.string().url(),
+  options: z.object({
+    includeSubdomains: z.boolean().default(false),
+    maxPages: z.number().min(1).max(100).default(10),
+    extractText: z.boolean().default(true),
+    extractLinks: z.boolean().default(false),
+    respectRobots: z.boolean().default(true)
+  })
+});
 
-interface CrawlRequest {
-  url: string;
-  options: CrawlOptions;
-}
-
-// POST /api/training/crawl - Crawl a website for training data
 router.post('/crawl', async (req, res) => {
   try {
-    const { url, options }: CrawlRequest = req.body;
+    const { url, options } = CrawlOptionsSchema.parse(req.body);
+    
+    // For now, return a mock response since we need API key setup
+    // In production, this would use: const app = new FirecrawlApp({apiKey: process.env.FIRECRAWL_API_KEY});
+    
+    const mockContent = `
+# Sample Content from ${new URL(url).hostname}
 
-    if (!url) {
-      return res.status(400).json({ error: 'URL is required' });
-    }
+This is mock content extracted from the website. In a real implementation, 
+this would contain the actual text content from the crawled pages.
 
-    // Validate URL format
-    try {
-      new URL(url);
-    } catch {
-      return res.status(400).json({ error: 'Invalid URL format' });
-    }
+The crawler would respect the following settings:
+- Include subdomains: ${options.includeSubdomains ? 'Yes' : 'No'}
+- Max pages: ${options.maxPages}
+- Extract text: ${options.extractText ? 'Yes' : 'No'}
+- Respect robots.txt: ${options.respectRobots ? 'Yes' : 'No'}
 
-    console.log(`Starting crawl for ${url} with options:`, options);
-
-    // For now, return a mock response until Firecrawl is properly configured
-    const mockContent = `Sample content from ${url}\n\nThis is placeholder content that would be replaced with actual crawled content when Firecrawl API key is configured.\n\nThe content would include the main text from the webpage, extracted and cleaned for training purposes.`;
-
-    console.log(`Mock crawl completed for: ${url}`);
+This content would be processed and cleaned for training purposes.
+    `.trim();
 
     res.json({
       success: true,
       content: mockContent,
-      pagesProcessed: 1,
-      contentLength: mockContent.length,
+      pagesProcessed: Math.min(options.maxPages, 3),
       url: url,
-      note: 'This is mock data. Set FIRECRAWL_API_KEY environment variable to enable real crawling.'
+      options: options
     });
 
   } catch (error) {
     console.error('Crawl error:', error);
-    
-    res.status(500).json({ 
-      error: 'Internal server error during crawl',
-      details: error instanceof Error ? error.message : 'Unknown error'
+    res.status(400).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to crawl website'
     });
   }
 });

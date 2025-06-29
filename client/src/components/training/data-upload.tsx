@@ -4,7 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
-import { UploadCloud, File, X, Database, ExternalLink, AlertCircle } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Switch } from "@/components/ui/switch";
+import { UploadCloud, File, X, Database, ExternalLink, AlertCircle, Globe, Link } from "lucide-react";
 import { useTraining } from "@/hooks/use-training";
 import { useToast } from "@/hooks/use-toast";
 
@@ -20,6 +24,15 @@ export function DataUpload() {
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [previewText, setPreviewText] = useState("");
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [crawling, setCrawling] = useState(false);
+  const [crawlUrl, setCrawlUrl] = useState('');
+  const [crawlOptions, setCrawlOptions] = useState({
+    includeSubdomains: false,
+    maxPages: 10,
+    extractText: true,
+    extractLinks: false,
+    respectRobots: true
+  });
   const { uploadDataMutation, isUploading } = useTraining();
   const { toast } = useToast();
 
@@ -100,6 +113,62 @@ export function DataUpload() {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
+  const crawlWebsite = async () => {
+    if (!crawlUrl.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter a valid URL to crawl",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setCrawling(true);
+    try {
+      const response = await fetch('/api/training/crawl', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          url: crawlUrl,
+          options: crawlOptions
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to crawl website');
+      }
+
+      const result = await response.json();
+      
+      // Add crawled data as a new file
+      const crawledFile: UploadedFile = {
+        filename: `crawled_${new URL(crawlUrl).hostname}_${Date.now()}.txt`,
+        originalName: `crawled_${new URL(crawlUrl).hostname}.txt`,
+        path: '/temp/crawled',
+        size: result.content?.length || 0
+      };
+
+      setUploadedFiles(prev => [...prev, crawledFile]);
+      setCrawlUrl('');
+      
+      toast({
+        title: "Website Crawled Successfully",
+        description: `Extracted content from ${result.pagesProcessed || 1} page(s)`,
+      });
+    } catch (error) {
+      console.error('Error crawling website:', error);
+      toast({
+        title: "Crawl Failed",
+        description: "Failed to crawl the website. Please check the URL and try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setCrawling(false);
+    }
+  };
+
   const totalSize = uploadedFiles.reduce((sum, file) => sum + file.size, 0);
   const avgLength = uploadedFiles.length > 0 ? "256 tokens" : "0 tokens"; // This would be calculated from actual content
 
@@ -110,12 +179,13 @@ export function DataUpload() {
           <UploadCloud className="w-5 h-5 mr-2 text-blue-500" />
           Training Data
         </CardTitle>
-        <p className="text-sm text-muted-foreground">Upload and manage your training datasets</p>
+        <p className="text-sm text-muted-foreground">Upload files, crawl websites, or use sample datasets</p>
       </CardHeader>
       <CardContent className="p-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* File Upload Area */}
+        <div className="space-y-6">
+          {/* File Upload Section */}
           <div className="space-y-4">
+            <h4 className="text-sm font-medium text-foreground">File Upload</h4>
             <div
               className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors cursor-pointer ${
                 dragActive 
@@ -136,6 +206,160 @@ export function DataUpload() {
                 type="file"
                 className="hidden"
                 multiple
+                onChange={(e) => e.target.files && handleFiles(e.target.files)}
+                accept=".txt,.json,.jsonl,.csv"
+              />
+            </div>
+          </div>
+
+          {/* Web Crawling Section */}
+          <div className="space-y-4">
+            <h4 className="text-sm font-medium text-foreground">Web Crawling</h4>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="crawl-url">Website URL</Label>
+                <div className="flex space-x-2">
+                  <Input
+                    id="crawl-url"
+                    type="url"
+                    placeholder="https://example.com"
+                    value={crawlUrl}
+                    onChange={(e) => setCrawlUrl(e.target.value)}
+                    className="flex-1"
+                  />
+                  <Button 
+                    onClick={crawlWebsite} 
+                    disabled={crawling || !crawlUrl.trim()}
+                    className="flex items-center gap-2"
+                  >
+                    {crawling ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                        Crawling...
+                      </>
+                    ) : (
+                      <>
+                        <Link className="w-4 h-4" />
+                        Crawl Site
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border rounded-lg bg-muted/50">
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-3">
+                    <div className="flex flex-col items-center space-y-1">
+                      <Switch
+                        checked={crawlOptions.includeSubdomains}
+                        onCheckedChange={(checked) => 
+                          setCrawlOptions(prev => ({ ...prev, includeSubdomains: checked }))
+                        }
+                      />
+                      <span className={`text-xs font-medium ${crawlOptions.includeSubdomains ? 'text-green-600' : 'text-gray-500'}`}>
+                        {crawlOptions.includeSubdomains ? 'ON' : 'OFF'}
+                      </span>
+                    </div>
+                    <div className="flex-1">
+                      <Label className="text-sm font-medium">Include Subdomains</Label>
+                      <p className="text-xs text-muted-foreground">Crawl subdomains of the target site</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-3">
+                    <div className="flex flex-col items-center space-y-1">
+                      <Switch
+                        checked={crawlOptions.extractText}
+                        onCheckedChange={(checked) => 
+                          setCrawlOptions(prev => ({ ...prev, extractText: checked }))
+                        }
+                      />
+                      <span className={`text-xs font-medium ${crawlOptions.extractText ? 'text-green-600' : 'text-gray-500'}`}>
+                        {crawlOptions.extractText ? 'ON' : 'OFF'}
+                      </span>
+                    </div>
+                    <div className="flex-1">
+                      <Label className="text-sm font-medium">Extract Text Content</Label>
+                      <p className="text-xs text-muted-foreground">Extract clean text for training</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-3">
+                    <div className="flex flex-col items-center space-y-1">
+                      <Switch
+                        checked={crawlOptions.respectRobots}
+                        onCheckedChange={(checked) => 
+                          setCrawlOptions(prev => ({ ...prev, respectRobots: checked }))
+                        }
+                      />
+                      <span className={`text-xs font-medium ${crawlOptions.respectRobots ? 'text-green-600' : 'text-gray-500'}`}>
+                        {crawlOptions.respectRobots ? 'ON' : 'OFF'}
+                      </span>
+                    </div>
+                    <div className="flex-1">
+                      <Label className="text-sm font-medium">Respect robots.txt</Label>
+                      <p className="text-xs text-muted-foreground">Follow site crawling rules</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="space-y-1">
+                    <Label className="text-sm font-medium">Max Pages to Crawl</Label>
+                    <Input
+                      type="number"
+                      min="1"
+                      max="100"
+                      value={crawlOptions.maxPages}
+                      onChange={(e) => 
+                        setCrawlOptions(prev => ({ ...prev, maxPages: parseInt(e.target.value) || 10 }))
+                      }
+                      className="w-full"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Sample Data Section */}
+          <div className="space-y-4">
+            <h4 className="text-sm font-medium text-foreground">Sample Data Sources</h4>
+            <div className="space-y-2">
+              <Button variant="outline" className="w-full justify-between">
+                <span>Hugging Face Datasets</span>
+                <ExternalLink className="w-4 h-4" />
+              </Button>
+              <Button variant="outline" className="w-full justify-between">
+                <span>Sample Text Datasets</span>
+                <Database className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+          
+          <TabsContent value="upload" className="mt-6">
+            <div className="space-y-4">
+              <div
+                className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors cursor-pointer ${
+                  dragActive 
+                    ? 'border-primary bg-primary/5' 
+                    : 'border-muted-foreground hover:border-muted-foreground/70'
+                }`}
+                onDragEnter={handleDrag}
+                onDragLeave={handleDrag}
+                onDragOver={handleDrag}
+                onDrop={handleDrop}
+                onClick={() => document.getElementById('file-upload')?.click()}
+              >
+                <UploadCloud className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                <p className="text-foreground font-medium mb-2">Drop files here or click to upload</p>
+                <p className="text-sm text-muted-foreground">Supports .txt, .json, .jsonl, .csv</p>
+                <input
+                  id="file-upload"
+                  type="file"
+                  className="hidden"
+                  multiple
                 accept=".txt,.json,.jsonl,.csv"
                 onChange={handleChange}
               />
@@ -250,7 +474,7 @@ export function DataUpload() {
               </div>
             )}
           </div>
-        </div>
+        </Tabs>
       </CardContent>
     </Card>
   );
